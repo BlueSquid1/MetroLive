@@ -139,7 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MetroLive\MetroLive.csproj">
-      <Project>{92f5dadc-2938-4520-89dd-e846ff33e06d}</Project>
+      <Project>{BB5E35A6-FB00-4A95-900E-8C4B8A0B77A9}</Project>
       <Name>MetroLive</Name>
     </ProjectReference>
   </ItemGroup>
