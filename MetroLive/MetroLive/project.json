@@ -1,9 +1,0 @@
-﻿{
-  "dependencies": {
-    "GTFS": "1.7.1",
-    "Xamarin.Forms": "2.3.3.180"
-  },
-  "frameworks": {
-    ".NETPortable,Version=v4.6,Profile=Profile44": {}
-  }
-}

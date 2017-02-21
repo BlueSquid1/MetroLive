@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E1BE6BE5-3E57-4497-B8EC-3AB86C5F5225}</ProjectGuid>
+    <ProjectGuid>{13CEF3A7-70FE-4A9B-A794-4C237B7D3B6E}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -122,7 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MetroLive\MetroLive.csproj">
-      <Project>{92f5dadc-2938-4520-89dd-e846ff33e06d}</Project>
+      <Project>{80accb06-c7b8-4703-bb1a-31fa30e7e4ec}</Project>
       <Name>MetroLive</Name>
     </ProjectReference>
   </ItemGroup>

@@ -13,7 +13,7 @@ namespace MetroLive
         {
             InitializeComponent();
 
-            MainPage = new MetroLive.MainPage();
+           this.MainPage = new MetroLive.MainPage();
         }
 
         protected override void OnStart()

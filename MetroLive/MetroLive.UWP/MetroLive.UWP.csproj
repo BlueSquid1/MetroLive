@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{C2B70D25-E786-48FF-8ABA-76BC5D285833}</ProjectGuid>
+    <ProjectGuid>{F4C88565-8674-4C96-A8CA-694149B68241}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MetroLive.UWP</RootNamespace>
@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MetroLive\MetroLive.csproj">
-      <Project>{92f5dadc-2938-4520-89dd-e846ff33e06d}</Project>
+      <Project>{80accb06-c7b8-4703-bb1a-31fa30e7e4ec}</Project>
       <Name>MetroLive</Name>
     </ProjectReference>
   </ItemGroup>
