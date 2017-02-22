@@ -9,17 +9,11 @@ namespace MetroLive
 {
     public partial class App : Application
     {
-        public static IList<string> PhoneNumbers { get; set; }
-
         public App()
         {
-            PhoneNumbers = new List<string>();
-            PhoneNumbers.Add("test");
-            PhoneNumbers.Add("test2");
-
             InitializeComponent();
 
-           this.MainPage = new MetroLive.View.StopDetailsView();
+           this.MainPage = new NavigationPage(new MetroLive.View.MainView());
         }
 
         protected override void OnStart()
