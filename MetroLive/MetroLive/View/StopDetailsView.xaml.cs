@@ -25,10 +25,19 @@ namespace MetroLive.View
         {
             this.txtBusID.Text = busId.ToString();
 
-            string url = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM?MonitoringRef=" + busId.ToString() + "&PreviewInterval=60&StopMonitoringDetailLevel=normal&MaximumStopVisits=100&Item=1";
+            //preview interval = 60 (how far into the future to read)
+            //
+            string url = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM?MonitoringRef=" + busId.ToString() + "&PreviewInterval=60&StopMonitoringDetailLevel=minimum&MaximumStopVisits=100&Item=1";
 
             HttpClient httpClient = new HttpClient();
-            txtBusDetails.Text = await httpClient.GetStringAsync(new Uri(url));
+            try
+            {
+                txtBusDetails.Text = await httpClient.GetStringAsync(new Uri(url));
+            }
+            catch
+            {
+                //WriteLine("");
+            }
         }
     }
 }

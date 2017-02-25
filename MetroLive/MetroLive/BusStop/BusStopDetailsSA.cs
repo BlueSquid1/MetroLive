@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetroLive.SIRI
+namespace MetroLive.BusStop
 {
-    class SiriManager
+    class BusStopDetailsSA : BusStopDetails
     {
+
     }
 }

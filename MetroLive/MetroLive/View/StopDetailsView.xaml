@@ -11,7 +11,6 @@
             WinPhone="20, 20, 20, 20" />
   </ContentPage.Padding>
   <ScrollView>
-    <ScrollView.Content>
     <StackLayout HorizontalOptions="FillAndExpand"
                  Orientation="Vertical"
                  Spacing="15">
@@ -21,6 +20,5 @@
                Text="" />
         <!--<ListView ItemsSource="{local:App.PhoneNumbers}" /> -->
     </StackLayout>
-      </ScrollView.Content>
     </ScrollView>
 </ContentPage>
