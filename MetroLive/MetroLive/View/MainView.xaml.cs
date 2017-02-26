@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLive.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,19 @@ namespace MetroLive.View
 {
     public partial class MainView : ContentPage
     {
+        private MetroLiveCore metroLive;
+
+        //constructor
         public MainView()
         {
             InitializeComponent();
+            metroLive = new MetroLiveCoreSA();
         }
 
         private async void OnTripDetail(object sender, EventArgs e)
         {
-            //use NavigationPage instead
-            await this.Navigation.PushAsync( new View.StopDetailsView(Convert.ToInt32(txtBusID.Text)));
+            StopDetailsView stopDetails = new StopDetailsView(metroLive, txtBusID.Text);
+            await this.Navigation.PushAsync(stopDetails);
         }
     }
 }

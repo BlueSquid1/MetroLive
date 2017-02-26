@@ -13,6 +13,8 @@ namespace MetroLive.Common
         protected virtual string GTFSBaseUrl { get; set; }
         protected virtual string SIRIBaseUrl { get; set; }
 
+        public MetroLiveSettings Settings { get; set; }
+
         //protected 
 
         //constructor
@@ -21,6 +23,6 @@ namespace MetroLive.Common
 
         }
 
-        public abstract Task<BusStopDetails> GetBusStopDetailsAsync(string busId);
+        public abstract BusStopDetails GetBusStopDetails(string busId);
     }
 }

@@ -16,10 +16,10 @@ namespace MetroLive.Common
             base.SIRIBaseUrl = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM";
         }
 
-        public override async Task<BusStopDetails> GetBusStopDetailsAsync(string busId)
+        public override BusStopDetails GetBusStopDetails(string busId)
         {
+            //Convert.ToInt32()
             BusStopDetailsSA busStop = new BusStopDetailsSA();
-            await busStop.FetchDataAsync();
             return busStop;
         }
     }

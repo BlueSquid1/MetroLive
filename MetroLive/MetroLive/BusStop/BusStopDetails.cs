@@ -9,7 +9,7 @@ namespace MetroLive.BusStop
     public abstract class BusStopDetails
     {
         //triggered when new information about the stop is discovered
-        public event EventHandler<EventArgs> NewUpdate;
+        public event EventHandler<EventArgs> NewInfo;
 
         //bus stop reference number
         public string StopRef { get; set; }
@@ -35,14 +35,18 @@ namespace MetroLive.BusStop
         public string Version { get; set; }
 
         //constructor
-        public BusStopDetails( string busStopId )
+        public BusStopDetails( string stopRef)
         {
-            this.BusStopId = busStopId;
+            this.StopRef = stopRef;
 
             IncomingVehicles = new List<VehicleJourney>();
         }
 
+        public abstract Task StartListeningAsyc();
+
+        public abstract Task FetchscheduledDataAsync(DateTimeOffset timeRange);
+
         //populates bus data
-        public abstract void FetchDataAsync(DateTimeOffset timeRange);
+        public abstract Task FetchLiveDataAsync(DateTimeOffset timeRange);
     }
 }

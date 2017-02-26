@@ -7,20 +7,48 @@ using System.Net.Http;
 
 using Xamarin.Forms;
 using System.IO;
+using MetroLive.Common;
+using MetroLive.BusStop;
 
 namespace MetroLive.View
 {
     public partial class StopDetailsView : ContentPage
     {
-        //public static IList<string> PhoneNumbers { get; set; }
+        private MetroLiveCore metroLive;
+        private BusStopDetails busStop;
 
         //constructors
-        public StopDetailsView(int busReference)
+        public StopDetailsView(MetroLiveCore mMetroLive, string busReference)
         {
             InitializeComponent();
-            SetStopDetails(busReference);
+            this.metroLive = mMetroLive;
+
+            busStop = metroLive.GetBusStopDetails(busReference);
+            busStop.NewInfo += BusStop_NewInfo;
+            this.Appearing += StopDetailsView_Appearing;
         }
 
+        private void BusStop_NewInfo(object sender, EventArgs e)
+        {
+            UpdateDisplay();
+        }
+
+        //triggered when page is about to be displayed
+        private async void StopDetailsView_Appearing(object sender, EventArgs e)
+        {
+            await busStop.StartListeningAsyc();
+            await busStop.FetchscheduledDataAsync( new DateTimeOffset( DateTime.Now, TimeSpan.FromMinutes(120)));
+            UpdateDisplay();
+            await busStop.FetchLiveDataAsync(new DateTimeOffset(DateTime.Now + metroLive.Settings.SIRIStart, metroLive.Settings.SIRIPreviewInterval));
+            UpdateDisplay();
+        }
+
+        private void UpdateDisplay()
+        {
+
+        }
+
+        /*
         private async void SetStopDetails(int busId)
         {
             this.txtBusID.Text = busId.ToString();
@@ -39,5 +67,6 @@ namespace MetroLive.View
                 //WriteLine("");
             }
         }
+        */
     }
 }
