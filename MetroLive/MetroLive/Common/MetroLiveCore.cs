@@ -3,26 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MetroLive.BusStop;
+using MetroLive.MetroData;
+using MetroLive.SIRI;
 
 namespace MetroLive.Common
 {
     //main interface for all logic operations
-    public abstract class MetroLiveCore
+    public class MetroLiveCore
     {
-        protected virtual string GTFSBaseUrl { get; set; }
-        protected virtual string SIRIBaseUrl { get; set; }
+        private SiriManager siriMgr { get; set; }
+        private GTFSLoader scheduleData { get; set; }
+
 
         public MetroLiveSettings Settings { get; set; }
 
         //protected 
 
         //constructor
-        public MetroLiveCore()
+        public MetroLiveCore(GTFSLoader gtfsLoader, SiriManager mSiriMgr)
         {
-
+            this.scheduleData = gtfsLoader;
+            this.siriMgr = mSiriMgr;
         }
 
-        public abstract BusStopDetails GetBusStopDetails(string busId);
+        
+        public BusStopDetails GetBusStopDetails(string busId)
+        {
+            //Convert.ToInt32()
+            BusStopDetails busStop = new BusStopDetails(busId);
+            return busStop;
+        }
+        
+
+
+        public virtual async Task LoadScheduleAsync()
+        {
+            await scheduleData.LoadSchedule();
+        }
     }
 }

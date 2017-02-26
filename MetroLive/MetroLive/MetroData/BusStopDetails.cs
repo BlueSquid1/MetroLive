@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetroLive.BusStop
+namespace MetroLive.MetroData
 {
-    public abstract class BusStopDetails
+    public class BusStopDetails
     {
         //triggered when new information about the stop is discovered
         public event EventHandler<EventArgs> NewInfo;
@@ -42,11 +42,19 @@ namespace MetroLive.BusStop
             IncomingVehicles = new List<VehicleJourney>();
         }
 
-        public abstract Task StartListeningAsyc();
+        /*
+        public Task StartListeningAsyc()
+        {
+            throw new NotImplementedException();
+        }
 
-        public abstract Task FetchscheduledDataAsync(DateTimeOffset timeRange);
+        public Task FetchscheduledDataAsync(DateTimeOffset timeRange)
+        {
+            throw new NotImplementedException();
+        }
 
         //populates bus data
         public abstract Task FetchLiveDataAsync(DateTimeOffset timeRange);
+        */
     }
 }

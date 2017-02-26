@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MetroLive.BusStop
+namespace MetroLive.MetroData
 {
     public class VehicleJourney
     {

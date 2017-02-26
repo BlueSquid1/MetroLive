@@ -8,17 +8,17 @@ using System.Net.Http;
 using Xamarin.Forms;
 using System.IO;
 using MetroLive.Common;
-using MetroLive.BusStop;
+using MetroLive.MetroData;
 
-namespace MetroLive.View
+namespace MetroLive.Pages
 {
-    public partial class StopDetailsView : ContentPage
+    public partial class StopDetailPage : ContentPage
     {
         private MetroLiveCore metroLive;
         private BusStopDetails busStop;
 
         //constructors
-        public StopDetailsView(MetroLiveCore mMetroLive, string busReference)
+        public StopDetailPage(MetroLiveCore mMetroLive, string busReference)
         {
             InitializeComponent();
             this.metroLive = mMetroLive;
@@ -36,11 +36,13 @@ namespace MetroLive.View
         //triggered when page is about to be displayed
         private async void StopDetailsView_Appearing(object sender, EventArgs e)
         {
+            /*
             await busStop.StartListeningAsyc();
-            await busStop.FetchscheduledDataAsync( new DateTimeOffset( DateTime.Now, TimeSpan.FromMinutes(120)));
+            await busStop.FetchscheduledDataAsync(new DateTimeOffset(DateTime.Now, TimeSpan.FromMinutes(120)));
             UpdateDisplay();
             await busStop.FetchLiveDataAsync(new DateTimeOffset(DateTime.Now + metroLive.Settings.SIRIStart, metroLive.Settings.SIRIPreviewInterval));
             UpdateDisplay();
+            */
         }
 
         private void UpdateDisplay()
@@ -68,5 +70,6 @@ namespace MetroLive.View
             }
         }
         */
+
     }
 }

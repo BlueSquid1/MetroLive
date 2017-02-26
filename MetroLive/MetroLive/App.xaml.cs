@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MetroLive.Pages;
 
 using Xamarin.Forms;
 
@@ -13,7 +14,7 @@ namespace MetroLive
         {
             InitializeComponent();
 
-           this.MainPage = new NavigationPage(new MetroLive.View.MainView());
+           this.MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()
