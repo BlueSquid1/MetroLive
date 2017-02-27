@@ -12,34 +12,46 @@ namespace MetroLive.Common
     //main interface for all logic operations
     public class MetroLiveCore
     {
-        private SiriManager siriMgr { get; set; }
-        private GTFSLoader scheduleData { get; set; }
-
-
+        public List<BusStopDetails> FavouriteStops { get; set; }
         public MetroLiveSettings Settings { get; set; }
+
+        private SiriManager siriMgr { get; set; }
+        private GTFSLoader GTFSData { get; set; }
 
         //protected 
 
         //constructor
         public MetroLiveCore(GTFSLoader gtfsLoader, SiriManager mSiriMgr)
         {
-            this.scheduleData = gtfsLoader;
+            this.GTFSData = gtfsLoader;
             this.siriMgr = mSiriMgr;
+            this.FavouriteStops = new List<BusStopDetails>();
+
+            LoadFavStops();
         }
 
-        
+        public async Task<bool> TimeTableAvaliableOffline()
+        {
+            return await GTFSData.TimeTableAvaliableOffline();
+        }
+
+        public async Task<bool> UpdateTimeTable()
+        {
+            return await GTFSData.UpdateTimeTable();
+        }
+
+
         public BusStopDetails GetBusStopDetails(string busId)
         {
             //Convert.ToInt32()
             BusStopDetails busStop = new BusStopDetails(busId);
             return busStop;
         }
-        
 
-
-        public virtual async Task<bool> TimeTableAvaliableOffline()
+        //TODO: load favourite stops
+        private void LoadFavStops()
         {
-            return await scheduleData.TimeTableAvaliableOffline();
+            
         }
     }
 }

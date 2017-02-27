@@ -27,7 +27,12 @@ namespace MetroLive.Pages
             if(isTimeTableLocal == false)
             {
                 //download timetable
-
+                bool dlState = await metroLive.UpdateTimeTable();
+                if(dlState == false)
+                {
+                    //display error message
+                    //TODO
+                }
             }
         }
 

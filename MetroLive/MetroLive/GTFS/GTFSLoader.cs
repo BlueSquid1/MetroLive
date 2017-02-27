@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -20,19 +21,21 @@ namespace MetroLive.GTFS
             this.GTFSBaseUrl = baseUrl;
         }
 
+        //TODO
+        public async Task<bool> UpdateTimeTable()
+        {
+            HttpClient httpClient = new HttpClient();
+            Stream GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
+            await fileMgr.WriteToFileAsync(GTFSCompressed);
+            
+            return true;
+        }
+
         //Checks if the timetable is avaliable locally
         public virtual async Task<bool> TimeTableAvaliableOffline()
         {
+            //TODO
             return false;
-            /*
-            HttpClient httpClient = new HttpClient();
-            Stream GTFSCompressed =await httpClient.GetStreamAsync(GTFSBaseUrl);
-
-            //System.IO.Compression.GZipStream gZip = new System.IO.Compression.GZipStream(GTFSCompressed, System.IO.Compression.CompressionLevel.Fastest);
-            //gZip.
-            //x.
-            //System.IO.Compression.ZipFile x;
-            */
         }
     }
 }
