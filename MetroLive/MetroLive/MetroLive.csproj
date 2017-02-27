@@ -38,6 +38,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GTFS\FileManager.cs" />
+    <Compile Include="GTFS\GTFSLoaderAdelaide.cs" />
     <Compile Include="MetroData\BusStopDetails.cs" />
     <Compile Include="MetroData\VehicleJourney.cs" />
     <Compile Include="Common\MetroLiveSettings.cs" />

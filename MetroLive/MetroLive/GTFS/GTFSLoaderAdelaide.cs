@@ -8,23 +8,16 @@ using System.Threading.Tasks;
 
 namespace MetroLive.GTFS
 {
-    public class GTFSLoader
+    public class GTFSLoaderAdelaide : GTFSLoader
     {
-        protected string GTFSBaseUrl;
-        protected FileManager fileMgr;
-
         //constructor
-        public GTFSLoader(FileManager mFileMgr, string baseUrl)
+        public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://adelaidemetro.com.au/GTFS/google_transit.zip")
         {
-            this.fileMgr = mFileMgr;
-            this.GTFSBaseUrl = baseUrl;
+
         }
 
-        //Checks if the timetable is avaliable locally
-        public virtual async Task<bool> TimeTableAvaliableOffline()
+        public async Task LoadSchedule()
         {
-            return false;
-            /*
             HttpClient httpClient = new HttpClient();
             Stream GTFSCompressed =await httpClient.GetStreamAsync(GTFSBaseUrl);
 
@@ -32,7 +25,6 @@ namespace MetroLive.GTFS
             //gZip.
             //x.
             //System.IO.Compression.ZipFile x;
-            */
         }
     }
 }

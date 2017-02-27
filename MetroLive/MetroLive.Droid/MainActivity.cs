@@ -20,7 +20,10 @@ namespace MetroLive.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            LoadApplication(new App());
+
+            FileManagerDroid fileMgr = new FileManagerDroid();
+
+            LoadApplication(new App(fileMgr));
         }
     }
 }

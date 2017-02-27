@@ -12,18 +12,23 @@ namespace MetroLive.Pages
     public partial class MainPage : ContentPage
     {
         private MetroLiveCore metroLive;
-
         //constructor
-        public MainPage()
+        public MainPage(MetroLiveCore mMetroLive)
         {
             InitializeComponent();
+            metroLive = mMetroLive;
+
             this.Appearing += MainView_Appearing;
-            metroLive = new MetroLiveCore();
         }
 
         private async void MainView_Appearing(object sender, EventArgs e)
         {
-            await metroLive.LoadScheduleAsync();
+            bool isTimeTableLocal = await metroLive.TimeTableAvaliableOffline();
+            if(isTimeTableLocal == false)
+            {
+                //download timetable
+
+            }
         }
 
         private async void OnTripDetail(object sender, EventArgs e)

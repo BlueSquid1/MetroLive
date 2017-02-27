@@ -21,7 +21,9 @@ namespace MetroLive.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new MetroLive.App());
+            FileManagerUWP fileMgr = new FileManagerUWP();
+
+            LoadApplication(new MetroLive.App(fileMgr));
         }
     }
 }

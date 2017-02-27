@@ -5,16 +5,25 @@ using System.Text;
 using MetroLive.Pages;
 
 using Xamarin.Forms;
+using MetroLive.GTFS;
+using MetroLive.SIRI;
+using MetroLive.Common;
 
 namespace MetroLive
 {
     public partial class App : Application
     {
-        public App()
+        private MetroLiveCore metroLive;
+
+        public App(FileManager fileMgr)
         {
             InitializeComponent();
 
-           this.MainPage = new NavigationPage(new MainPage());
+            GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
+            SiriManager siriMgr = new SiriManager();
+
+            metroLive = new MetroLiveCore(gtfsLoader, siriMgr);
+            this.MainPage = new NavigationPage(new MainPage(metroLive));
         }
 
         protected override void OnStart()

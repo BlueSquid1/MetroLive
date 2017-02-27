@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MetroLive.MetroData;
 using MetroLive.SIRI;
+using MetroLive.GTFS;
 
 namespace MetroLive.Common
 {
@@ -36,9 +37,9 @@ namespace MetroLive.Common
         
 
 
-        public virtual async Task LoadScheduleAsync()
+        public virtual async Task<bool> TimeTableAvaliableOffline()
         {
-            await scheduleData.LoadSchedule();
+            return await scheduleData.TimeTableAvaliableOffline();
         }
     }
 }
