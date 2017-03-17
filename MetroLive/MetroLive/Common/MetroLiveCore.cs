@@ -30,9 +30,9 @@ namespace MetroLive.Common
             LoadFavStops();
         }
 
-        public async Task<bool> TimeTableAvaliableOffline()
+        public async Task<bool> isTimeTableAvaliableOffline()
         {
-            return await GTFSData.TimeTableAvaliableOffline();
+            return await GTFSData.TimeTableUptoDate();
         }
 
         public async Task<bool> UpdateTimeTable()

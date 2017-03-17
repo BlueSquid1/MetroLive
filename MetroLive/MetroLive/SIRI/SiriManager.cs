@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MetroLive.SIRI
 {
-    public class SiriManager
+    public abstract class SiriManager
     {
-
+        public abstract Task GetStopDataAsync(DateTimeOffset timeRange, string StopRef);
     }
 }

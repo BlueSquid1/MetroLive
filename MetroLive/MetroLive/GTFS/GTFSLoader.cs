@@ -21,21 +21,28 @@ namespace MetroLive.GTFS
             this.GTFSBaseUrl = baseUrl;
         }
 
-        //TODO
         public async Task<bool> UpdateTimeTable()
         {
             HttpClient httpClient = new HttpClient();
             Stream GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
-            await fileMgr.WriteToFileAsync(GTFSCompressed);
+            await fileMgr.WriteArchiveToDiskAsync(GTFSCompressed);
             
             return true;
         }
 
         //Checks if the timetable is avaliable locally
-        public virtual async Task<bool> TimeTableAvaliableOffline()
+        public virtual async Task<bool> TimeTableUptoDate()
         {
-            //TODO
-            return false;
+            ZipArchiveEntry feedInfo = await fileMgr.GetArchiveEntryAsync("feed_info.txt");
+            if(feedInfo == null)
+            {
+                return false;
+            }
+
+            Stream infoStream = feedInfo.Open();
+            BinaryReader binReader = new BinaryReader(infoStream);
+            string version = binReader.ReadString();
+            return true;
         }
     }
 }

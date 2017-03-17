@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using MetroLive.GTFS;
 using MetroLive.SIRI;
 using MetroLive.Common;
+using MetroLive.SIRI.Adelaide;
 
 namespace MetroLive
 {
@@ -20,7 +21,7 @@ namespace MetroLive
             InitializeComponent();
 
             GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
-            SiriManager siriMgr = new SiriManager();
+            SiriManager siriMgr = new SiriMgrAdelaide();
 
             metroLive = new MetroLiveCore(gtfsLoader, siriMgr);
             this.MainPage = new NavigationPage(new MainPage(metroLive));

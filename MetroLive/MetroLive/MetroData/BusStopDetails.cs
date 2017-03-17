@@ -1,16 +1,18 @@
-﻿using System;
+﻿using MetroLive.GTFS;
+using MetroLive.SIRI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using MetroLive.SIRI.Adelaide;
+using Newtonsoft.Json;
 
 namespace MetroLive.MetroData
 {
     public class BusStopDetails
     {
-        //triggered when new information about the stop is discovered
-        public event EventHandler<EventArgs> NewInfo;
-
         //bus stop reference number
         public string StopRef { get; set; }
 
@@ -34,6 +36,9 @@ namespace MetroLive.MetroData
 
         public string Version { get; set; }
 
+        private SiriManager siriMgr;
+        private GTFSLoader gtfsLoader;
+
         //constructor
         public BusStopDetails( string stopRef)
         {
@@ -42,19 +47,18 @@ namespace MetroLive.MetroData
             IncomingVehicles = new List<VehicleJourney>();
         }
 
-        /*
-        public Task StartListeningAsyc()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task FetchscheduledDataAsync(DateTimeOffset timeRange)
         {
             throw new NotImplementedException();
         }
+        
 
         //populates bus data
-        public abstract Task FetchLiveDataAsync(DateTimeOffset timeRange);
-        */
+        public async Task FetchLRealTimeDataAsync(DateTimeOffset timeRange)
+        {
+            await siriMgr.GetStopDataAsync(timeRange, StopRef);
+
+        }
+
     }
 }

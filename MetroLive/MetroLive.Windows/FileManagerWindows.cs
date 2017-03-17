@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MetroLive.GTFS;
 
-namespace MetroLive.UWP
+namespace MetroLive.Windows
 {
-    public class FileManagerUWP : FileManager
+    class FileManagerWindows : FileManager
     {
-
     }
 }

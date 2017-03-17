@@ -23,7 +23,8 @@ namespace MetroLive.Pages
 
         private async void MainView_Appearing(object sender, EventArgs e)
         {
-            bool isTimeTableLocal = await metroLive.TimeTableAvaliableOffline();
+            //make sure the timetable is avaliable offline
+            bool isTimeTableLocal = await metroLive.isTimeTableAvaliableOffline();
             if(isTimeTableLocal == false)
             {
                 //download timetable
