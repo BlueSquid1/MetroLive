@@ -31,12 +31,9 @@ namespace MetroLive.Windows
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            BusStopDetails stopDetails = metroCore.GetBusStopDetails("11984");
-            await stopDetails.FetchLRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
-            SIRIObjAdelaide temp = new SIRIObjAdelaide();
+            BusStopMgr stopMgr = metroCore.GetBusStopDetails("13277");
 
-            string output = JsonConvert.SerializeObject(temp, Formatting.Indented);
-            Console.WriteLine(output);
+            BusStopDetails x = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
         }
     }
 }

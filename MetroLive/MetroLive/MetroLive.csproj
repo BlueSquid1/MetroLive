@@ -41,6 +41,7 @@
     <Compile Include="GTFS\FileManager.cs" />
     <Compile Include="GTFS\GTFSLoaderAdelaide.cs" />
     <Compile Include="MetroData\BusStopDetails.cs" />
+    <Compile Include="MetroData\BusStopMgr.cs" />
     <Compile Include="MetroData\VehicleJourney.cs" />
     <Compile Include="Common\MetroLiveSettings.cs" />
     <Compile Include="GTFS\GTFSLoader.cs" />
