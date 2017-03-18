@@ -40,9 +40,10 @@ namespace MetroLive.MetroData
         private GTFSLoader gtfsLoader;
 
         //constructor
-        public BusStopDetails( string stopRef)
+        public BusStopDetails( string stopRef, SiriManager mSiriMgr)
         {
             this.StopRef = stopRef;
+            this.siriMgr = mSiriMgr;
 
             IncomingVehicles = new List<VehicleJourney>();
         }

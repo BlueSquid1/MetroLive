@@ -44,7 +44,7 @@ namespace MetroLive.Common
         public BusStopDetails GetBusStopDetails(string busId)
         {
             //Convert.ToInt32()
-            BusStopDetails busStop = new BusStopDetails(busId);
+            BusStopDetails busStop = new BusStopDetails(busId, siriMgr);
             return busStop;
         }
 
