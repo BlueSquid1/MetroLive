@@ -12,7 +12,7 @@ namespace MetroLive.MetroData
         public DateTime? RspTimestamp { get; set; }
 
         //valid until timestamp
-        public DateTime? ValidUntil { get; set; }
+        //public DateTime? ValidUntil { get; set; }
 
         //e.g. 38 Lower Athelstone Road
         public string StopPointName { get; set; }

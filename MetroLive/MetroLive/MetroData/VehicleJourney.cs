@@ -9,12 +9,13 @@ namespace MetroLive.MetroData
         public DateTime? ValidUntil { get; set; } //time message is valid till
 
         //journey details
-        public int ConfidenceLevel { get; set; } //confidence level in data (1 = high, 2 = medium, 3 = not real time I think)
+        public int? ConfidenceLevel { get; set; } //confidence level in data (1 = high, 2 = medium, 3 = not real time I think)
         public string FinalDestinationName { get; set; }
-        public char Dirrection { get; set; }
+        public bool? DirrectionAway { get; set; } //dirrection is going away from the city
         public string LineRef { get; set; }
-        public DateTime AimedArrival { get; set; } //the aimed time of arrival
-        public DateTime EstimatedArrival { get; set; } //the estimated time of arrival I think
+        public DateTime? AimedArrival { get; set; } //does not take into account real time data
+        public DateTime? EarliestEstimatedArrival { get; set; } //takes into account real time data
+        public DateTime? LatestEstimatedArrival { get; set; } //takes into account real time data
 
 
         //vehicle details

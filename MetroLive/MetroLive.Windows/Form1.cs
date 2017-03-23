@@ -32,8 +32,7 @@ namespace MetroLive.Windows
         private async void Form1_Load(object sender, EventArgs e)
         {
             BusStopMgr stopMgr = metroCore.GetBusStopDetails("13277");
-
-            BusStopDetails x = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
+            BusStopDetails y = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
         }
     }
 }
