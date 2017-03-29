@@ -17,7 +17,27 @@
              Text="" />
       <Label x:Name="txtBusDetails"
              Text="" />
-      <!--<ListView ItemsSource="{local:App.PhoneNumbers}" /> -->
+      <!--<ListView x:Name="listView" /> -->
+      <!--list of busses coming-->
+      <ListView x:Name="listView" ItemSelected="OnItemSelected">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <!--for each row-->
+            <ViewCell>
+              <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                <StackLayout Padding="5,0,0,0" VerticalOptions="StartAndExpand" Orientation="Vertical">
+                  <Label Text="{Binding BusName}" VerticalTextAlignment="Center" FontSize="Medium" />
+                </StackLayout>
+                <Label Text="{Binding ExpectArrival}" VerticalTextAlignment="Center" FontSize="Small" />
+                <Label Text="{Binding EarlyDiff}" VerticalTextAlignment="Center" FontSize="Small" />
+              </StackLayout>
+            </ViewCell>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+
+
+
     </StackLayout>
   </ScrollView>
 </ContentPage>

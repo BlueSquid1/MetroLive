@@ -23,6 +23,7 @@ namespace MetroLive.Pages
 
         private async void MainView_Appearing(object sender, EventArgs e)
         {
+            /*
             //make sure the timetable is avaliable offline
             bool isTimeTableLocal = await metroLive.isTimeTableAvaliableOffline();
             if(isTimeTableLocal == false)
@@ -35,6 +36,7 @@ namespace MetroLive.Pages
                     //TODO
                 }
             }
+            */
         }
 
         private async void OnTripDetail(object sender, EventArgs e)
