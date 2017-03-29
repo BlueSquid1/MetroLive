@@ -96,6 +96,7 @@
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
     <None Include="packages.config" />
+    <Compile Include="FileManageriOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -147,7 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MetroLive\MetroLive.csproj">
-      <Project>{80accb06-c7b8-4703-bb1a-31fa30e7e4ec}</Project>
+      <Project>{9148111B-1A0C-48A7-9AE9-273AE5C9F944}</Project>
       <Name>MetroLive</Name>
     </ProjectReference>
   </ItemGroup>
