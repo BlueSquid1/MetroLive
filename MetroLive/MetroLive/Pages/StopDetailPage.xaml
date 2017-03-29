@@ -19,18 +19,96 @@
              Text="" />
       <!--<ListView x:Name="listView" /> -->
       <!--list of busses coming-->
-      <ListView x:Name="listView" ItemSelected="OnItemSelected">
+      <ListView x:Name="listView" 
+                ItemSelected="OnItemSelected"
+                RowHeight="70"
+        >
         <ListView.ItemTemplate>
           <DataTemplate>
             <!--for each row-->
             <ViewCell>
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions> 
+                
+                <Grid Grid.Row="0"
+                      Grid.Column="0"
+                      BackgroundColor ="Gray">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+                 
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <Label Text="{Binding TimeTillArrival}" 
+                         VerticalTextAlignment="Center"
+                         HorizontalTextAlignment="Center"
+                         FontSize="Medium"
+                         TextColor="White"
+                         Grid.Row="0"
+                         Grid.Column="0"/>
+                  
+                  <Label Text="mins" 
+                         VerticalTextAlignment="Center"
+                         HorizontalTextAlignment="Center"
+                         FontSize="Small"
+                         TextColor="White"
+                         Grid.Row="1"
+                         Grid.Column="0"/>
+                </Grid>
+                               
+                <Label Text="{Binding LineRef}" 
+                       TextColor="Black"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       FontSize="Large" 
+                       Grid.Row="0"
+                       Grid.Column="1"/>
+                
+                <Label Text="{Binding ExpectArrival}" 
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       FontSize="Small"
+                       Grid.Row="0"
+                       Grid.Column="2"/>
+                
+                
+                <Label Text="{Binding TimeDiff}"
+                         VerticalTextAlignment="Center"
+                         HorizontalTextAlignment="Center"
+                         FontSize="Small"
+                         Grid.Row="0"
+                         Grid.Column="3"/>
+                
+                  <!--<Label Text="{Binding ExpectedUncertainty}" FontSize="Small" /> -->
+
+
+              
+              <!--
               <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
                 <StackLayout Padding="5,0,0,0" VerticalOptions="StartAndExpand" Orientation="Vertical">
-                  <Label Text="{Binding BusName}" VerticalTextAlignment="Center" FontSize="Medium" />
+                  <Label Text="{Binding TimeTillArrival}" VerticalTextAlignment="Center" FontSize="Medium" />
+                  <Label Text="mins" VerticalTextAlignment="Center" FontSize="Medium" />
                 </StackLayout>
+                <Label Text="{Binding LineRef}" VerticalTextAlignment="Center" FontSize="Large" />
                 <Label Text="{Binding ExpectArrival}" VerticalTextAlignment="Center" FontSize="Small" />
-                <Label Text="{Binding EarlyDiff}" VerticalTextAlignment="Center" FontSize="Small" />
+                <StackLayout Orientation="Horizontal" >
+                  <Label Text="{Binding TimeDiff}" FontSize="Small" />
+                  <Label Text="{Binding ExpectedUncertainty}" FontSize="Small" />
+                </StackLayout>
               </StackLayout>
+              -->
+              </Grid> 
             </ViewCell>
           </DataTemplate>
         </ListView.ItemTemplate>
