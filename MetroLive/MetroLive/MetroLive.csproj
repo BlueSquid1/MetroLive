@@ -46,6 +46,9 @@
     <Compile Include="Common\MetroLiveSettings.cs" />
     <Compile Include="GTFS\GTFSLoader.cs" />
     <Compile Include="Common\MetroLiveCore.cs" />
+    <Compile Include="Pages\VehicleDetailPage.xaml.cs">
+      <DependentUpon>VehicleDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\StopDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\VehicleDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -15,6 +15,9 @@ namespace MetroLive.Pages
 {
     public class BusViewModel
     {
+        //for identification purposes only
+        public string BusId { get; set; }
+
         public string LineRef { get; set; }
         public string ExpectArrival { get; set; }
         public string ExpectedUncertainty { get; set; }
@@ -26,6 +29,7 @@ namespace MetroLive.Pages
     {
         private MetroLiveCore metroLive;
         private BusStopMgr stopMgr;
+        private BusStopDetails stopDetails;
 
         //constructors
         public StopDetailPage(MetroLiveCore mMetroLive, string busReference)
@@ -35,14 +39,16 @@ namespace MetroLive.Pages
             this.Appearing += StopDetailsView_Appearing;
 
             stopMgr = mMetroLive.GetBusStopDetails(busReference);
+
+            this.Title = "Stop ID: " + busReference;
         }
 
         //triggered when page is about to be displayed
         private async void StopDetailsView_Appearing(object sender, EventArgs e)
         {
             //get realtime info
-            BusStopDetails stopDetails = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
-            UpdateDisplay(stopDetails);
+            this.stopDetails = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
+            UpdateDisplay(this.stopDetails);
         }
 
         private void UpdateDisplay(BusStopDetails stopDetails)
@@ -61,10 +67,11 @@ namespace MetroLive.Pages
                 estimateAvg.Value.AddMinutes(realTimeUncertainty.Value.Minutes / 2);
                 string estimateAvgString = estimateAvg.Value.TimeOfDay.ToString();
                 TimeSpan? timeTillArrival = estimateAvg - DateTime.Now;
-                string timeTillArrivalStr = timeTillArrival.Value.TotalMinutes.ToString();
+                string timeTillArrivalStr = ((int)timeTillArrival.Value.TotalMinutes).ToString();
 
                 busCollection.Add(new BusViewModel
                 {
+                    BusId = vehicle?.VehicleRef,
                     ExpectedUncertainty = uncertainty,
                     TimeDiff = timeDiff,
                     LineRef = lineRef,
@@ -75,13 +82,29 @@ namespace MetroLive.Pages
             listView.ItemsSource = busCollection;
         }
 
-        public void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        public async void OnSelectedItem(object sender, SelectedItemChangedEventArgs  e)
         {
-            /*
-            if (e.SelectedItem == null) return; // has been set to null, do not 'process' tapped event
-            DisplayAlert("Tapped", e.SelectedItem + " row was tapped", "OK");
-            ((ListView)sender).SelectedItem = null; // de-select the row
-            */
+            BusViewModel busViewModel = (BusViewModel)e.SelectedItem;
+
+            VehicleJourney vehicle = FindJourneyByBusRef(busViewModel.BusId);
+
+            VehicleDetailPage stopDetails = new VehicleDetailPage(metroLive, vehicle);
+            await this.Navigation.PushAsync(stopDetails);
+                        
+        }
+
+        public VehicleJourney FindJourneyByBusRef(string busRef)
+        {
+            //for bus ref number get the correct VehicleJourney
+            foreach (VehicleJourney vehicle in stopDetails.IncomingVehicles)
+            {
+                if (vehicle.VehicleRef == busRef)
+                {
+                    return vehicle;
+                }
+            }
+            return null;
+
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MetroLive.Pages.VehicleDetailPage">
+  <StackLayout HorizontalOptions="FillAndExpand"
+                 Orientation="Vertical"
+                 Spacing="15">
+    <Label x:Name="BusId" Text="" VerticalOptions="Start" HorizontalOptions="Start" />
+    <Label x:Name="LineRef" Text="" VerticalOptions="Start" HorizontalOptions="Start" />
+  </StackLayout>
+</ContentPage>

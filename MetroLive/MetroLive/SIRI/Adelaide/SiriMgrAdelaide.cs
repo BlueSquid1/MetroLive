@@ -15,7 +15,7 @@ namespace MetroLive.SIRI.Adelaide
         public override async Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTimeOffset timeRange)
         {
             //preview interval = 60 (how far into the future to read)
-            //
+            //            
             string url = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM?MonitoringRef=" + StopRef.ToString() + "&PreviewInterval=60&StopMonitoringDetailLevel=normal&MaximumStopVisits=100&Item=1";
 
             string replyMsg = null;
@@ -28,6 +28,12 @@ namespace MetroLive.SIRI.Adelaide
             catch
             {
                 //failed
+                return new BusStopDetails();
+            }
+
+            
+            if(replyMsg == null)
+            {
                 return new BusStopDetails();
             }
 

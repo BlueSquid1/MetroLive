@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="Main Page"
+             Title="MetroLive"
              x:Class="MetroLive.Pages.MainPage">
   <ContentPage.Padding>
     <OnPlatform x:TypeArguments="Thickness"
@@ -13,14 +13,10 @@
   <StackLayout HorizontalOptions="FillAndExpand"
                  Orientation="Vertical"
                  Spacing="15">
-    <StackLayout Orientation="Horizontal"
-                 Spacing="10">
-      <Label Text="Enter Bus ID:" />
-      <Entry Text="11984"
-             x:Name="txtBusID"/>
+        <SearchBar Placeholder="Enter stop name or stop id"
+                   SearchButtonPressed="OnSearch"
+                   Text="11984" />
+      
     </StackLayout>
-    <Button Clicked="OnTripDetail" Text ="GO">
-    </Button>
-  </StackLayout>
 
 </ContentPage>
