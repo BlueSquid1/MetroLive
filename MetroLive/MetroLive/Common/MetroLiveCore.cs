@@ -12,7 +12,7 @@ namespace MetroLive.Common
     //main interface for all logic operations
     public class MetroLiveCore
     {
-        public List<BusStopDetails> FavouriteStops { get; set; }
+        public List<FavouriteStop> FavouriteStops { get; set; }
         public MetroLiveSettings Settings { get; set; }
 
         private SiriManager siriMgr { get; set; }
@@ -25,7 +25,7 @@ namespace MetroLive.Common
         {
             this.GTFSData = gtfsLoader;
             this.siriMgr = mSiriMgr;
-            this.FavouriteStops = new List<BusStopDetails>();
+            this.FavouriteStops = new List<FavouriteStop>();
 
             LoadFavStops();
         }

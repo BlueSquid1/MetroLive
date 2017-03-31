@@ -31,8 +31,8 @@ namespace MetroLive.SIRI.Adelaide
                 return new BusStopDetails();
             }
 
-            
-            if(replyMsg == null)
+
+            if (replyMsg == null)
             {
                 return new BusStopDetails();
             }
@@ -47,11 +47,18 @@ namespace MetroLive.SIRI.Adelaide
             //get bus stop details
             busStop.StopRef = stopMon.MonitoringRef?.FirstOrDefault()?.Value;
             busStop.RspTimestamp = GetLocalDateTime(stopMon?.ResponseTimestamp);
+
+            //other the other bus details need a vehicle journey
+            if (stopMon?.MonitoredStopVisit == null)
+            {
+                return busStop;
+            }
             busStop.StopPointName = stopMon?.MonitoredStopVisit.FirstOrDefault()?.MonitoredVehicleJourney?.MonitoredCall?.StopPointName?.FirstOrDefault()?.Value;
 
             string xCordStr = stopMon?.MonitoredStopVisit.FirstOrDefault()?.MonitoredVehicleJourney?.MonitoredCall?.VehicleLocationAtStop?.Items[0];
             string yCordStr = stopMon?.MonitoredStopVisit.FirstOrDefault()?.MonitoredVehicleJourney?.MonitoredCall?.VehicleLocationAtStop?.Items[1];
-            if(xCordStr != null && yCordStr != null)
+
+            if (xCordStr != null && yCordStr != null)
             {
                 busStop.busStopX = float.Parse(xCordStr);
                 busStop.busStopY = float.Parse(yCordStr);
@@ -60,7 +67,7 @@ namespace MetroLive.SIRI.Adelaide
 
             //get busses that are comming
             List<StopVisit> BussesTracked = stopMon?.MonitoredStopVisit;
-            foreach( StopVisit bus in BussesTracked)
+            foreach (StopVisit bus in BussesTracked)
             {
                 MetroData.VehicleJourney incomingVehicle = new MetroData.VehicleJourney();
                 Adelaide.VehicleJourney stopVisit = bus?.MonitoredVehicleJourney;
@@ -86,7 +93,7 @@ namespace MetroLive.SIRI.Adelaide
 
         private DateTime? GetLocalDateTime(string rawDateTime)
         {
-            if(rawDateTime == null)
+            if (rawDateTime == null)
             {
                 return null;
             }
@@ -95,7 +102,7 @@ namespace MetroLive.SIRI.Adelaide
             string tickString = Regex.Replace(rawDateTime, @"(/Date\()|(\+1030\)/)|(\)/)", string.Empty);
             long linuxTicks = long.Parse(tickString);
 
-            if(linuxTicks == 0)
+            if (linuxTicks == 0)
             {
                 return null;
             }

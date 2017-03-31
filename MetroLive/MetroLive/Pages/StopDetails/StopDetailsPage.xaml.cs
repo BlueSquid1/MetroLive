@@ -11,7 +11,7 @@ using MetroLive.Common;
 using MetroLive.MetroData;
 using System.Collections.ObjectModel;
 
-namespace MetroLive.Pages
+namespace MetroLive.Pages.StopDetails
 {
     public class BusViewModel
     {
@@ -27,6 +27,8 @@ namespace MetroLive.Pages
 
     public partial class StopDetailPage : ContentPage
     {
+        //private StopDetailsModel x;
+
         private MetroLiveCore metroLive;
         private BusStopMgr stopMgr;
         private BusStopDetails stopDetails;
@@ -37,6 +39,8 @@ namespace MetroLive.Pages
             InitializeComponent();
             this.metroLive = mMetroLive;
             this.Appearing += StopDetailsView_Appearing;
+
+            this.BindingContext = new StopDetailsModel();
 
             stopMgr = mMetroLive.GetBusStopDetails(busReference);
 
@@ -53,7 +57,8 @@ namespace MetroLive.Pages
 
         private void Fav_Clicked(object sender, EventArgs e)
         {
-            
+            //toggle adding bus to favourites
+
         }
 
         private void UpdateDisplay(BusStopDetails stopDetails)
@@ -61,7 +66,7 @@ namespace MetroLive.Pages
             ObservableCollection<BusViewModel> busCollection = new ObservableCollection<BusViewModel>();
 
             //populate the collection
-            foreach ( VehicleJourney vehicle in stopDetails.IncomingVehicles )
+            foreach (VehicleJourney vehicle in stopDetails.IncomingVehicles)
             {
                 string lineRef = vehicle?.LineRef;
                 TimeSpan? realTimeUncertainty = vehicle?.LatestEstimatedArrival - vehicle?.EarliestEstimatedArrival;
@@ -87,7 +92,7 @@ namespace MetroLive.Pages
             listView.ItemsSource = busCollection;
         }
 
-        public async void OnSelectedItem(object sender, SelectedItemChangedEventArgs  e)
+        public async void OnSelectedItem(object sender, SelectedItemChangedEventArgs e)
         {
             BusViewModel busViewModel = (BusViewModel)e.SelectedItem;
 
@@ -95,7 +100,7 @@ namespace MetroLive.Pages
 
             VehicleDetailPage stopDetails = new VehicleDetailPage(metroLive, vehicle);
             await this.Navigation.PushAsync(stopDetails);
-                        
+
         }
 
         public VehicleJourney FindJourneyByBusRef(string busRef)

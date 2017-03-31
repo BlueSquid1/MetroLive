@@ -38,23 +38,24 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\FavouriteStop.cs" />
     <Compile Include="GTFS\FileManager.cs" />
     <Compile Include="GTFS\GTFSLoaderAdelaide.cs" />
-    <Compile Include="ImageResourceExtension.cs" />
     <Compile Include="MetroData\BusStopDetails.cs" />
     <Compile Include="MetroData\BusStopMgr.cs" />
     <Compile Include="MetroData\VehicleJourney.cs" />
     <Compile Include="Common\MetroLiveSettings.cs" />
     <Compile Include="GTFS\GTFSLoader.cs" />
     <Compile Include="Common\MetroLiveCore.cs" />
+    <Compile Include="Pages\StopDetails\StopDetailsModel.cs" />
+    <Compile Include="Pages\StopDetails\StopDetailsPage.xaml.cs">
+      <DependentUpon>StopDetailsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\VehicleDetailPage.xaml.cs">
       <DependentUpon>VehicleDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\StopDetailPage.xaml.cs">
-      <DependentUpon>StopDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SIRI\Adelaide\SIRIObjAdelaide.cs" />
@@ -111,13 +112,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\StopDetailPage.xaml">
+    <EmbeddedResource Include="Pages\VehicleDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\VehicleDetailPage.xaml">
+    <EmbeddedResource Include="Pages\StopDetails\StopDetailsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
