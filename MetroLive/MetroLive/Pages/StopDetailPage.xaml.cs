@@ -51,6 +51,11 @@ namespace MetroLive.Pages
             UpdateDisplay(this.stopDetails);
         }
 
+        private void Fav_Clicked(object sender, EventArgs e)
+        {
+            
+        }
+
         private void UpdateDisplay(BusStopDetails stopDetails)
         {
             ObservableCollection<BusViewModel> busCollection = new ObservableCollection<BusViewModel>();

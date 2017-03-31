@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MetroLive;assembly=MetroLive"
              Title=""
              x:Class="MetroLive.Pages.StopDetailPage">
-  <ContentPage.Padding>
-    <OnPlatform x:TypeArguments="Thickness"
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
             iOS="20, 40, 20, 20"
             Android="20, 20, 20, 20"
             WinPhone="20, 20, 20, 20" />
-  </ContentPage.Padding>
+    </ContentPage.Padding>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Test"/>
+        <ToolbarItem Text="Fav"
+                     Clicked="Fav_Clicked">
+            <ToolbarItem.Icon>
+                <FileImageSource>
+                    <FileImageSource.File>
+                        <OnPlatform x:TypeArguments="x:String" 
+                                    iOS="star_empty.png"
+                                    Android="star_empty.png" />
+                    </FileImageSource.File>
+                </FileImageSource>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
             <ScrollView>
-            <StackLayout HorizontalOptions="FillAndExpand"
+                <StackLayout HorizontalOptions="FillAndExpand"
                          Orientation="Vertical"
                          Spacing="15">
+                    <!--<Image Source="{local:ImageResource MetroLive.Icons.star.png}" /> -->
 
-            <!--<BoxView BackgroundColor="Red" HeightRequest="600" WidthRequest="150" /> -->
-            <!--list of busses coming-->
-            <ListView x:Name="listView" 
+                    <ListView x:Name="listView" 
                       RowHeight="70"
                       ItemSelected="OnSelectedItem">
-                <ListView.HeaderTemplate >
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal"
-                                     BackgroundColor="Yellow">
-                            <Label Text="--"/>
-                            <!-- use the object in Header as the binding source -->
-                            <Label Text="--"/>
-                        </StackLayout>
-                    </DataTemplate>
-                </ListView.HeaderTemplate>
-
-                <ListView.ItemTemplate>
+                        <ListView.ItemTemplate>
                     <DataTemplate>
                         <!--for each row-->
                         <ViewCell>

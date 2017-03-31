@@ -40,6 +40,7 @@
     </Compile>
     <Compile Include="GTFS\FileManager.cs" />
     <Compile Include="GTFS\GTFSLoaderAdelaide.cs" />
+    <Compile Include="ImageResourceExtension.cs" />
     <Compile Include="MetroData\BusStopDetails.cs" />
     <Compile Include="MetroData\BusStopMgr.cs" />
     <Compile Include="MetroData\VehicleJourney.cs" />
