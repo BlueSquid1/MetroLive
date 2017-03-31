@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MetroLive;assembly=MetroLive"
@@ -13,7 +13,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Fav"
                      Clicked="Fav_Clicked">
-            <ToolbarItem.Icon>
+            <!-- <ToolbarItem.Icon>
                 <FileImageSource>
                     <FileImageSource.File>
                         <OnPlatform x:TypeArguments="x:String" 
@@ -21,7 +21,7 @@
                                     Android="star_empty.png" />
                     </FileImageSource.File>
                 </FileImageSource>
-            </ToolbarItem.Icon>
+            </ToolbarItem.Icon> -->
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -54,6 +54,11 @@
                                 <Grid Grid.Row="0"
                       Grid.Column="0"
                       BackgroundColor ="Gray">
+											<Grid.BackgroundColor>
+												<OnPlatform x:TypeArguments="Color"
+															iOS="#FFFFFF"
+															Android="#AAAAAA"/>
+											</Grid.BackgroundColor>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
@@ -62,21 +67,31 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Text="{Binding TimeTillArrival}" 
+                         <Label Text="{Binding TimeTillArrival}" 
                          VerticalTextAlignment="Center"
                          HorizontalTextAlignment="Center"
                          FontSize="Medium"
-                         TextColor="White"
                          Grid.Row="0"
-                         Grid.Column="0"/>
+                         Grid.Column="0">
+												<Label.TextColor>
+													<OnPlatform x:TypeArguments="Color"
+															iOS="#000000"
+															Android="#FFFFFF"/>
+												</Label.TextColor>
+											</Label>
 
-                                    <Label Text="mins" 
+                         <Label Text="mins" 
                          VerticalTextAlignment="Center"
                          HorizontalTextAlignment="Center"
                          FontSize="Small"
-                         TextColor="White"
                          Grid.Row="1"
-                         Grid.Column="0"/>
+                         Grid.Column="0">
+												<Label.TextColor>
+													<OnPlatform x:TypeArguments="Color"
+															iOS="#000000"
+															Android="#FFFFFF"/>
+												</Label.TextColor>
+											</Label>
                                 </Grid>
 
                                 <Label Text="{Binding LineRef}" 
