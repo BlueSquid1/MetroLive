@@ -15,11 +15,21 @@ namespace MetroLive.Pages
     public partial class MainPage : ContentPage
     {
         private MetroLiveCore metroLive;
+
         //constructor
         public MainPage(MetroLiveCore mMetroLive)
         {
             InitializeComponent();
-            metroLive = mMetroLive;
+            this.Appearing += MainPage_Appearing;
+
+            this.metroLive = mMetroLive;
+
+        }
+
+        private async void MainPage_Appearing(object sender, EventArgs e)
+        {
+            //update favourites list
+            //await this.metroLive.LoadFavStopsAsync();
         }
 
         public async void OnSearch(object sender, EventArgs e)

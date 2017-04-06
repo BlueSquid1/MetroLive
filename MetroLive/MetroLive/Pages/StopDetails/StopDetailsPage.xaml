@@ -32,13 +32,13 @@
                          Orientation="Vertical"
                          Spacing="15">
                     <!--<Image Source="{local:ImageResource MetroLive.Icons.star.png}" /> -->
-                    <!--<Label Text="{Binding XVar, StringFormat='x is {0}'}" /> -->
-                    <Label Text="test2">
-                    </Label>
                     <Label Text="{Binding Surname}" />
                     <ListView x:Name="listView" 
                       RowHeight="70"
-                      ItemSelected="OnSelectedItem">
+                      ItemSelected="OnSelectedItem"
+                      HeightRequest="700"
+                      ItemsSource="{Binding BusCollection}"
+                           >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <!--for each row-->

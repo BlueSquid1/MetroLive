@@ -13,34 +13,24 @@ using System.Collections.ObjectModel;
 
 namespace MetroLive.Pages.StopDetails
 {
-    public class BusViewModel
-    {
-        //for identification purposes only
-        public string BusId { get; set; }
-
-        public string LineRef { get; set; }
-        public string ExpectArrival { get; set; }
-        public string ExpectedUncertainty { get; set; }
-        public string TimeDiff { get; set; }
-        public string TimeTillArrival { get; set; }
-    }
-
     public partial class StopDetailPage : ContentPage
     {
-        //private StopDetailsModel x;
-
+        private StopDetailsModel stopDetailsModel;
         private MetroLiveCore metroLive;
         private BusStopMgr stopMgr;
-        private BusStopDetails stopDetails;
 
         //constructors
         public StopDetailPage(MetroLiveCore mMetroLive, string busReference)
         {
             InitializeComponent();
-            this.metroLive = mMetroLive;
+
+            this.stopDetailsModel = new StopDetailsModel();
+
             this.Appearing += StopDetailsView_Appearing;
 
-            this.BindingContext = new StopDetailsModel();
+            this.metroLive = mMetroLive;
+
+            this.BindingContext = stopDetailsModel;
 
             stopMgr = mMetroLive.GetBusStopDetails(busReference);
 
@@ -51,19 +41,20 @@ namespace MetroLive.Pages.StopDetails
         private async void StopDetailsView_Appearing(object sender, EventArgs e)
         {
             //get realtime info
-            this.stopDetails = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
-            UpdateDisplay(this.stopDetails);
+            BusStopDetails stopDetails = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
+            UpdateDisplay(stopDetails);
         }
 
         private void Fav_Clicked(object sender, EventArgs e)
         {
             //toggle adding bus to favourites
-
+            metroLive.AddBusToFavourites(stopMgr.BusStopId, "");
         }
 
+        
         private void UpdateDisplay(BusStopDetails stopDetails)
         {
-            ObservableCollection<BusViewModel> busCollection = new ObservableCollection<BusViewModel>();
+            List<BusViewModel> busCollection = new List<BusViewModel>();
 
             //populate the collection
             foreach (VehicleJourney vehicle in stopDetails.IncomingVehicles)
@@ -89,7 +80,15 @@ namespace MetroLive.Pages.StopDetails
                     TimeTillArrival = timeTillArrivalStr
                 });
             }
-            listView.ItemsSource = busCollection;
+            stopDetailsModel.BusCollection = busCollection;
+            //listView.ItemsSource = busCollection;
+
+            /*
+            if (busCollection.Count > 0)
+            {
+                listView.ScrollTo(busCollection.LastOrDefault(), ScrollToPosition.Start, false);
+            }
+            */
         }
 
         public async void OnSelectedItem(object sender, SelectedItemChangedEventArgs e)
@@ -103,10 +102,10 @@ namespace MetroLive.Pages.StopDetails
 
         }
 
-        public VehicleJourney FindJourneyByBusRef(string busRef)
+        private VehicleJourney FindJourneyByBusRef(string busRef)
         {
             //for bus ref number get the correct VehicleJourney
-            foreach (VehicleJourney vehicle in stopDetails.IncomingVehicles)
+            foreach (VehicleJourney vehicle in stopMgr.BusStopData.IncomingVehicles)
             {
                 if (vehicle.VehicleRef == busRef)
                 {

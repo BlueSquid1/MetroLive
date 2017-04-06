@@ -11,20 +11,20 @@ namespace MetroLive.MetroData
     public class BusStopMgr
     {
         //for buffering purposes
-        private BusStopDetails offlineBusStopData;
+        public BusStopDetails BusStopData { get; set; }
 
         //plateform/area specific code
         private GTFSLoader gtfsLoader;
         private SiriManager sirMgr;
 
-        private string busStopId;
+        public string BusStopId { get; set; }
 
 
         //constructor
         public BusStopMgr(string mBusStopId, GTFSLoader mGTFSLoader, SiriManager mSiriManager)
         {
-            this.busStopId = mBusStopId;
-            this.offlineBusStopData = null;
+            this.BusStopId = mBusStopId;
+            this.BusStopData = null;
             this.gtfsLoader = mGTFSLoader;
             this.sirMgr = mSiriManager;
         }
@@ -33,14 +33,23 @@ namespace MetroLive.MetroData
         {
             //overide previous offline data (maybe?)
                         
-            return offlineBusStopData;
+            return BusStopData;
         }
 
         public async Task<BusStopDetails> GetRealTimeDataAsync(DateTimeOffset timeInterval)
         {
-            //add to the previous results
-            offlineBusStopData = await sirMgr.GetStopDataAsync(busStopId, timeInterval);
-            return offlineBusStopData;
+            BusStopDetails newStopData = new BusStopDetails();
+            try
+            {
+                newStopData = await sirMgr.GetStopDataAsync(BusStopId, timeInterval);
+            }
+            catch
+            {
+
+            }
+            //add newStopData to the previous results
+            BusStopData = newStopData;
+            return BusStopData;
         }
     }
 }

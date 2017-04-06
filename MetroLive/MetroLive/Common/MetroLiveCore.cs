@@ -12,22 +12,17 @@ namespace MetroLive.Common
     //main interface for all logic operations
     public class MetroLiveCore
     {
-        public List<FavouriteStop> FavouriteStops { get; set; }
         public MetroLiveSettings Settings { get; set; }
 
         private SiriManager siriMgr { get; set; }
         private GTFSLoader GTFSData { get; set; }
-
-        //protected 
+        private List<FavouriteStop> favouriteStops;
 
         //constructor
         public MetroLiveCore(GTFSLoader gtfsLoader, SiriManager mSiriMgr)
         {
             this.GTFSData = gtfsLoader;
             this.siriMgr = mSiriMgr;
-            this.FavouriteStops = new List<FavouriteStop>();
-
-            LoadFavStops();
         }
 
         public async Task<bool> isTimeTableAvaliableOffline()
@@ -46,10 +41,17 @@ namespace MetroLive.Common
             return new BusStopMgr(busId, GTFSData, siriMgr);
         }
 
-        //TODO: load favourite stops
-        private void LoadFavStops()
+        public void AddBusToFavourites(string stopId, string customName)
         {
-            
+            favouriteStops.Add(new FavouriteStop(stopId, customName));
+
+            //TODO: update storage
+        }
+
+        public async Task GetFavStopsAsync()
+        {
+            //TODO: load from storage
+
         }
     }
 }
