@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MetroLive.MetroData;
 using MetroLive.SIRI;
 using MetroLive.GTFS;
+using Xamarin.Forms;
 
 namespace MetroLive.Common
 {
@@ -23,6 +24,7 @@ namespace MetroLive.Common
         {
             this.GTFSData = gtfsLoader;
             this.siriMgr = mSiriMgr;
+            //var db = new SQLiteConnection();
         }
 
         public async Task<bool> isTimeTableAvaliableOffline()
@@ -41,17 +43,27 @@ namespace MetroLive.Common
             return new BusStopMgr(busId, GTFSData, siriMgr);
         }
 
-        public void AddBusToFavourites(string stopId, string customName)
+        public void AddBusToFavourites(FavouriteStop newFavourite)
         {
-            favouriteStops.Add(new FavouriteStop(stopId, customName));
+            if(favouriteStops == null)
+            {
+                return;
+            }
+            favouriteStops.Add(newFavourite);
 
             //TODO: update storage
         }
 
-        public async Task GetFavStopsAsync()
+        public async Task< List<FavouriteStop> > GetFavStopsAsync()
         {
-            //TODO: load from storage
+            if (favouriteStops == null)
+            {
+                //TODO: load from storage
+                favouriteStops = new List<FavouriteStop>();
+                //return;
+            }
 
+            return favouriteStops;
         }
     }
 }

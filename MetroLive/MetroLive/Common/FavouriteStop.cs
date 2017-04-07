@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace MetroLive.Common
 {
     public class FavouriteStop
     {
         //stop reference number
-        public string stopId { get; set; }
+        public string StopId { get; set; }
 
         //custom name set by the user
-        public string customName { get; set; }
+        public string CustomName { get; set; }
 
-        public FavouriteStop(string mStopId, string mCustomName = null)
+        public Color CustColour { get; set; }
+
+        public FavouriteStop(string mStopId, string mCustomName, Color mCustColour)
         {
-            this.stopId = mStopId;
-            this.customName = mCustomName;
+            this.StopId = mStopId;
+            this.CustomName = mCustomName;
+            this.CustColour = mCustColour;
         }
     }
 }

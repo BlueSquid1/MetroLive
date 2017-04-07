@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MetroLive;assembly=MetroLive"
              x:Class="MetroLive.Pages.StopDetails.StopDetailPage"
-             Title=""
+             Title="{Binding Title}"
              >
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
@@ -26,13 +26,16 @@
         </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand">
+            <!-- header section -->
+            <!--<Image Source="{local:ImageResource MetroLive.Icons.star.png}" /> -->
+            <Label Text="{Binding Title}" />
+            
             <ScrollView>
                 <StackLayout HorizontalOptions="FillAndExpand"
                          Orientation="Vertical"
                          Spacing="15">
-                    <!--<Image Source="{local:ImageResource MetroLive.Icons.star.png}" /> -->
-                    <Label Text="{Binding Surname}" />
                     <ListView x:Name="listView" 
                       RowHeight="70"
                       ItemSelected="OnSelectedItem"
@@ -56,8 +59,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Grid Grid.Row="0"
-                      Grid.Column="0"
-                      BackgroundColor ="Gray">
+                                              Grid.Column="0">
                                             <Grid.BackgroundColor>
                                                 <OnPlatform x:TypeArguments="Color"
 															iOS="#FFFFFF"
@@ -120,25 +122,6 @@
                          FontSize="Small"
                          Grid.Row="0"
                          Grid.Column="3"/>
-
-                                        <!--<Label Text="{Binding ExpectedUncertainty}" FontSize="Small" /> -->
-
-
-
-                                        <!--
-              <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
-                <StackLayout Padding="5,0,0,0" VerticalOptions="StartAndExpand" Orientation="Vertical">
-                  <Label Text="{Binding TimeTillArrival}" VerticalTextAlignment="Center" FontSize="Medium" />
-                  <Label Text="mins" VerticalTextAlignment="Center" FontSize="Medium" />
-                </StackLayout>
-                <Label Text="{Binding LineRef}" VerticalTextAlignment="Center" FontSize="Large" />
-                <Label Text="{Binding ExpectArrival}" VerticalTextAlignment="Center" FontSize="Small" />
-                <StackLayout Orientation="Horizontal" >
-                  <Label Text="{Binding TimeDiff}" FontSize="Small" />
-                  <Label Text="{Binding ExpectedUncertainty}" FontSize="Small" />
-                </StackLayout>
-              </StackLayout>
-              -->
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>

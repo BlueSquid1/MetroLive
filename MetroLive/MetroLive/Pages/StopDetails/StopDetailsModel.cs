@@ -24,19 +24,19 @@ namespace MetroLive.Pages.StopDetails
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Surname
+        public string Title
         {
             get
             {
-                return surname;
+                return title;
             }
             set
             {
-                surname = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Surname"));
+                title = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Title"));
             }
         }
-        private string surname;
+        private string title;
 
         public List<BusViewModel> BusCollection
         {
@@ -56,7 +56,7 @@ namespace MetroLive.Pages.StopDetails
         //constructor
         public StopDetailsModel()
         {
-            this.surname = "Smith";
+            this.title = "";
             this.busCollection = new List<BusViewModel>();
         }
     }

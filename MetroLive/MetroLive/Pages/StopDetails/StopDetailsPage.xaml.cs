@@ -10,6 +10,7 @@ using System.IO;
 using MetroLive.Common;
 using MetroLive.MetroData;
 using System.Collections.ObjectModel;
+using MetroLive.Pages.VehicleDetail;
 
 namespace MetroLive.Pages.StopDetails
 {
@@ -24,17 +25,22 @@ namespace MetroLive.Pages.StopDetails
         {
             InitializeComponent();
 
-            this.stopDetailsModel = new StopDetailsModel();
-
             this.Appearing += StopDetailsView_Appearing;
 
+            this.stopDetailsModel = new StopDetailsModel();
             this.metroLive = mMetroLive;
 
+            //bind the model to the view
             this.BindingContext = stopDetailsModel;
 
-            stopMgr = mMetroLive.GetBusStopDetails(busReference);
+            InitalizeModel(busReference);
+        }
 
-            this.Title = "Stop ID: " + busReference;
+        private void InitalizeModel(string busReference)
+        {
+
+            this.stopMgr = metroLive.GetBusStopDetails(busReference);
+            this.stopDetailsModel.Title = "Stop ID: " + busReference;
         }
 
         //triggered when page is about to be displayed
@@ -48,7 +54,7 @@ namespace MetroLive.Pages.StopDetails
         private void Fav_Clicked(object sender, EventArgs e)
         {
             //toggle adding bus to favourites
-            metroLive.AddBusToFavourites(stopMgr.BusStopId, "");
+            metroLive.AddBusToFavourites(new FavouriteStop(stopMgr.BusStopId, "", new Color()));
         }
 
         
@@ -81,9 +87,9 @@ namespace MetroLive.Pages.StopDetails
                 });
             }
             stopDetailsModel.BusCollection = busCollection;
-            //listView.ItemsSource = busCollection;
 
             /*
+            // scroll to busses coming now
             if (busCollection.Count > 0)
             {
                 listView.ScrollTo(busCollection.LastOrDefault(), ScrollToPosition.Start, false);

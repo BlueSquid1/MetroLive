@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 
-namespace MetroLive.Pages
+namespace MetroLive.Pages.VehicleDetail
 {
     public partial class VehicleDetailPage : ContentPage
     {
@@ -29,7 +29,6 @@ namespace MetroLive.Pages
         {
             BusId.Text = vehicleDetails.VehicleRef;
             LineRef.Text = vehicleDetails.LineRef;
-            
         }
     }
 }
