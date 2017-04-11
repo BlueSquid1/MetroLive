@@ -5,16 +5,17 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using MetroLive.GTFS;
+using MetroLive.Common;
 
 namespace MetroLive.Droid
 {
     public class FileManagerDroid : FileManager
     {
-
+        public FileManagerDroid() : base(Environment.GetFolderPath(Environment.SpecialFolder.Personal))
+        {
+        }
     }
 }

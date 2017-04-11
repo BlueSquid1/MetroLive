@@ -51,10 +51,10 @@ namespace MetroLive.Pages.StopDetails
             UpdateDisplay(stopDetails);
         }
 
-        private void Fav_Clicked(object sender, EventArgs e)
+        private async void Fav_Clicked(object sender, EventArgs e)
         {
             //toggle adding bus to favourites
-            metroLive.AddBusToFavourites(new FavouriteStop(stopMgr.BusStopId, "", new Color()));
+            await metroLive.AddBusToFavourites(new FavouriteStop(stopMgr.BusStopId, "", new Color()));
         }
 
         

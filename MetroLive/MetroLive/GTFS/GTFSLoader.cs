@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLive.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -21,16 +22,15 @@ namespace MetroLive.GTFS
             this.GTFSBaseUrl = baseUrl;
         }
 
-        public async Task<bool> UpdateTimeTable()
+        public async Task DownloadTimeTable()
         {
+            //download zip file
             HttpClient httpClient = new HttpClient();
             Stream GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
-            await fileMgr.WriteArchiveToDiskAsync(GTFSCompressed);
-            
-            return true;
+            await fileMgr.WriteStreamToArchive("GTFSLoader.zip", GTFSCompressed);
         }
 
-        //Checks if the timetable is avaliable locally
+        /*
         public virtual async Task<bool> TimeTableUptoDate()
         {
             ZipArchiveEntry feedInfo = await fileMgr.GetArchiveEntryAsync("feed_info.txt");
@@ -44,5 +44,6 @@ namespace MetroLive.GTFS
             string version = binReader.ReadString();
             return true;
         }
+        */
     }
 }

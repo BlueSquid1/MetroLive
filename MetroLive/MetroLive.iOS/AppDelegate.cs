@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using System.IO;
 
 namespace MetroLive.iOS
 {
@@ -24,8 +25,9 @@ namespace MetroLive.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
-
-			FileManageriOS fileMgr = new FileManageriOS();
+            string docFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string rootPath = Path.Combine(docFolder, "..", "Library", "Databases");
+            FileManageriOS fileMgr = new FileManageriOS(rootPath);
 
             LoadApplication(new App( fileMgr ));
 

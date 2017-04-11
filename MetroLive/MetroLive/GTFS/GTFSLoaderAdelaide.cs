@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLive.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace MetroLive.GTFS
         public async Task LoadSchedule()
         {
             HttpClient httpClient = new HttpClient();
-            Stream GTFSCompressed =await httpClient.GetStreamAsync(GTFSBaseUrl);
+            Stream GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
 
             //System.IO.Compression.GZipStream gZip = new System.IO.Compression.GZipStream(GTFSCompressed, System.IO.Compression.CompressionLevel.Fastest);
             //gZip.

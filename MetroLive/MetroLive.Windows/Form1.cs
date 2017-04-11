@@ -26,13 +26,12 @@ namespace MetroLive.Windows
             FileManager fileMgr = new FileManagerWindows();
             SiriManager siriMgr = new SiriMgrAdelaide();
             GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
-            metroCore = new MetroLiveCore(gtfsLoader, siriMgr);
+            metroCore = new MetroLiveCore(fileMgr, gtfsLoader, siriMgr);
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            BusStopMgr stopMgr = metroCore.GetBusStopDetails("13277");
-            BusStopDetails y = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
+            await metroCore.StartUp();
         }
     }
 }

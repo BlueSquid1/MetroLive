@@ -24,7 +24,7 @@ namespace MetroLive
             GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
             SiriManager siriMgr = new SiriMgrAdelaide();
 
-            metroLive = new MetroLiveCore(gtfsLoader, siriMgr);
+            metroLive = new MetroLiveCore(fileMgr, gtfsLoader, siriMgr);
             this.MainPage = new NavigationPage(new MainPage(metroLive));
         }
 

@@ -7,63 +7,48 @@ using MetroLive.MetroData;
 using MetroLive.SIRI;
 using MetroLive.GTFS;
 using Xamarin.Forms;
+using SQLite;
 
 namespace MetroLive.Common
 {
     //main interface for all logic operations
     public class MetroLiveCore
     {
-        public MetroLiveSettings Settings { get; set; }
+        public SettingsManager SettingsMgr { get; set; }
 
         private SiriManager siriMgr { get; set; }
         private GTFSLoader GTFSData { get; set; }
-        private List<FavouriteStop> favouriteStops;
+        private FileManager fileMgr;
 
         //constructor
-        public MetroLiveCore(GTFSLoader gtfsLoader, SiriManager mSiriMgr)
+        public MetroLiveCore(FileManager mFileMgr, GTFSLoader gtfsLoader, SiriManager mSiriMgr)
         {
             this.GTFSData = gtfsLoader;
             this.siriMgr = mSiriMgr;
-            //var db = new SQLiteConnection();
+            this.fileMgr = mFileMgr;
+
+            this.SettingsMgr = new SettingsManager(mFileMgr);
         }
 
-        public async Task<bool> isTimeTableAvaliableOffline()
+        public async Task StartUp()
         {
-            return await GTFSData.TimeTableUptoDate();
+            await SettingsMgr.LoadSettingFromDisk();
         }
-
-        public async Task<bool> UpdateTimeTable()
-        {
-            return await GTFSData.UpdateTimeTable();
-        }
-
 
         public BusStopMgr GetBusStopDetails(string busId)
         {
             return new BusStopMgr(busId, GTFSData, siriMgr);
         }
 
-        public void AddBusToFavourites(FavouriteStop newFavourite)
+        public async Task AddBusToFavourites(FavouriteStop newFavourite)
         {
-            if(favouriteStops == null)
-            {
-                return;
-            }
-            favouriteStops.Add(newFavourite);
-
-            //TODO: update storage
+            SettingsMgr.Settings.FavStops.Add(newFavourite);
+            await SettingsMgr.SaveSettingToDisk();
         }
 
-        public async Task< List<FavouriteStop> > GetFavStopsAsync()
+        public List<FavouriteStop> GetFavStops()
         {
-            if (favouriteStops == null)
-            {
-                //TODO: load from storage
-                favouriteStops = new List<FavouriteStop>();
-                //return;
-            }
-
-            return favouriteStops;
+            return SettingsMgr.Settings.FavStops;
         }
     }
 }

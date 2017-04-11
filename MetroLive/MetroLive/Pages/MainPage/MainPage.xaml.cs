@@ -34,8 +34,8 @@ namespace MetroLive.Pages.MainPage
 
         private async void MainPage_Appearing(object sender, EventArgs e)
         {
-            //update favourites list
-            mainPageModel.FavStops = await this.metroLive.GetFavStopsAsync();
+            await metroLive.StartUp();
+            mainPageModel.FavStops = this.metroLive.GetFavStops();
         }
 
         public async void OnSearch(object sender, EventArgs e)
