@@ -9,6 +9,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using MetroLive.Common;
+using System.Runtime.CompilerServices;
 
 namespace MetroLive.Droid
 {

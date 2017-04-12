@@ -46,9 +46,16 @@ namespace MetroLive.Pages.StopDetails
         //triggered when page is about to be displayed
         private async void StopDetailsView_Appearing(object sender, EventArgs e)
         {
+            //get offline info
+            //get time since last midnight
+            DateTime now = DateTime.Now;
+            DateTime lastMidnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+            BusStopDetails stopDetailsOffline  = await stopMgr.GetOfflineDataAsync(new DateTimeOffset(lastMidnight.Ticks, TimeSpan.FromDays(1)));
+            UpdateDisplay(stopDetailsOffline);
+
             //get realtime info
-            BusStopDetails stopDetails = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
-            UpdateDisplay(stopDetails);
+            BusStopDetails stopDetailsReal = await stopMgr.GetRealTimeDataAsync(new DateTimeOffset(now.Ticks, TimeSpan.FromMinutes(60)));
+            UpdateDisplay(stopDetailsReal);
         }
 
         private async void Fav_Clicked(object sender, EventArgs e)

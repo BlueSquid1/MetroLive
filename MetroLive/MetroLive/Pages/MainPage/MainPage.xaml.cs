@@ -35,7 +35,28 @@ namespace MetroLive.Pages.MainPage
         private async void MainPage_Appearing(object sender, EventArgs e)
         {
             await metroLive.StartUp();
+
             mainPageModel.FavStops = this.metroLive.GetFavStops();
+
+            //check if GTFS exists locally
+            bool isAvaliable = await metroLive.IsTimeTableUptoDate();
+
+            if (isAvaliable == false)
+            {
+                //download timetable
+                mainPageModel.ShowOverlay = true;
+                bool downloadSuccess = false;
+                while (!downloadSuccess)
+                {
+                    downloadSuccess = await metroLive.DownloadTimeTable();
+                    if (downloadSuccess == false)
+                    {
+                        await DisplayAlert("Download Failed", "failed to download the latest timetable. Press Ok to try again", "Ok");
+                        return;
+                    }
+                }
+                mainPageModel.ShowOverlay = false;
+            }
         }
 
         public async void OnSearch(object sender, EventArgs e)

@@ -5,63 +5,75 @@
              x:Class="MetroLive.Pages.MainPage.MainPage">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
-            iOS="20, 40, 20, 20"
-            Android="20, 20, 20, 20"
-            WinPhone="20, 20, 20, 20" />
+            iOS="0, 40, 0, 0"
+            Android="0, 0, 0, 0"
+            WinPhone="0, 0, 0, 0" />
     </ContentPage.Padding>
-
-    <StackLayout HorizontalOptions="FillAndExpand"
-                 Orientation="Vertical"
-                 Spacing="15">
-        <SearchBar Placeholder="Enter stop name or stop id"
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+            <SearchBar Placeholder="Enter stop name or stop id"
                    SearchButtonPressed="OnSearch"
                    Text="11984" />
-        <ScrollView>
-            <StackLayout HorizontalOptions="FillAndExpand"
+            <ScrollView>
+                <StackLayout HorizontalOptions="FillAndExpand"
                          Orientation="Vertical"
                          Spacing="15">
-                <ListView x:Name="favListView" 
+                    <ListView x:Name="favListView" 
                       RowHeight="70"
                       ItemSelected="OnSelectedItem"
                       HeightRequest="700"
                       ItemsSource="{Binding FavStops}"
                            >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <!--for each row-->
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <!--for each row-->
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label Text="{Binding StopId}" 
+                                        <Label Text="{Binding StopId}" 
                                         VerticalTextAlignment="Center"
                                         HorizontalTextAlignment="Center"
                                         FontSize="Medium"
                                         Grid.Row="0"
                                         Grid.Column="0">
-                                    </Label>
+                                        </Label>
 
-                                    <Label Text="{Binding CustomName}"
+                                        <Label Text="{Binding CustomName}"
                                             VerticalTextAlignment="Center"
                                             HorizontalTextAlignment="Center"
                                             FontSize="Medium"
                                             Grid.Row="0"
                                             Grid.Column="1">
-                                    </Label>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </ScrollView>
-    </StackLayout>
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+        <!-- Overlay -->
+        <ContentView AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     IsVisible="{Binding ShowOverlay}"
+                     BackgroundColor="#C0808080"
+                     Padding="10, 0">
+            <ProgressBar x:Name="progressBar"
+                         VerticalOptions="Center" />
+        </ContentView>
+    </AbsoluteLayout>
 
 </ContentPage>

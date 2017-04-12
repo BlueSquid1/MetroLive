@@ -56,25 +56,41 @@ namespace MetroLive.Common
             return await file.ReadAllTextAsync();
         }
 
-        public async Task WriteStreamToArchive(string targetFile, Stream mFileStream)
+        public async Task<bool> WriteStreamToArchive(string targetFile, Stream mFileStream)
         {
             string completeFilePath = filePathRoot + targetFile;
-            IFile archiveFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
-
-            //check if file actually exists
-            if(archiveFile == null)
+            IFile archiveFile = null;
+            try
             {
-                //create file
-                IFolder root = await fileSystem.GetFolderFromPathAsync("./");
-                archiveFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
-            }
+                archiveFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
 
-            //dump archive into file
-            Stream fileStream = await archiveFile.OpenAsync(FileAccess.ReadAndWrite);
-            await mFileStream.CopyToAsync(fileStream);
+                //check if file actually exists
+                if (archiveFile == null)
+                {
+                    //create file
+                    IFolder root = await fileSystem.GetFolderFromPathAsync("./");
+                    archiveFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
+                }
+
+                //dump archive into file
+                Stream fileStream = await archiveFile.OpenAsync(FileAccess.ReadAndWrite);
+                await mFileStream.CopyToAsync(fileStream);
+                await fileStream.FlushAsync();
+                fileStream.Dispose();
+            }
+            catch
+            {
+                if (archiveFile != null)
+                {
+                    //delete the corrupt file
+                    await archiveFile.DeleteAsync();
+                }
+                return false;
+            }
+            return true;
         }
 
-        public async Task<ZipArchive> GetFileFromArchive(string archiveName)
+        public async Task<ZipArchive> GetZipFile(string archiveName)
         {
             string completeFilePath = filePathRoot + archiveName;
 
@@ -86,8 +102,16 @@ namespace MetroLive.Common
             }
 
             Stream zipStream = await file.OpenAsync(FileAccess.Read);
-
-            ZipArchive catchedArchive = new ZipArchive(zipStream);
+            ZipArchive catchedArchive = null;
+            try
+            {
+                catchedArchive = new ZipArchive(zipStream);
+            }
+            catch(Exception e)
+            {
+                //failed to load zip file
+                throw new Exception("Failed to load zip file.");
+            }
 
             //ZipArchiveEntry compressedFile = catchedArchive.GetEntry(fileName);
             return catchedArchive;

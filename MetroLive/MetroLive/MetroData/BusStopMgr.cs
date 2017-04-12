@@ -31,8 +31,12 @@ namespace MetroLive.MetroData
 
         public async Task<BusStopDetails> GetOfflineDataAsync(DateTimeOffset timeInterval )
         {
-            //overide previous offline data (maybe?)
-                        
+            BusStopDetails stopDataTemp = await gtfsLoader.GetBusStopData( BusStopId, timeInterval );
+
+            //populate bus stop from GTFS data
+
+            //dump into offiline buffer
+            BusStopData = stopDataTemp;
             return BusStopData;
         }
 

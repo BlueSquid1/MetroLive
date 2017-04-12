@@ -11,13 +11,23 @@ namespace MetroLive.Common
     {
         public static async Task<T> DeserializeObject<T>(string jsonText)
         {
-            T retObj = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(jsonText));
+            T retObj = JsonConvert.DeserializeObject<T>(jsonText);
+            //T retObj = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(jsonText));
             return retObj;
         }
 
         public static async Task<string> SerializeObject<T>(T obj)
         {
-            string retText = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(obj));
+            string retText = null;
+            try
+            {
+                retText = JsonConvert.SerializeObject(obj);
+            }
+            catch(Exception e)
+            {
+
+            }
+            //string retText = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(obj));
             return retText;
         }
     }

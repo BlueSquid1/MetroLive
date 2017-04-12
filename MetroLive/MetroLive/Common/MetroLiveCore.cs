@@ -7,13 +7,15 @@ using MetroLive.MetroData;
 using MetroLive.SIRI;
 using MetroLive.GTFS;
 using Xamarin.Forms;
-using SQLite;
+using MetroLive.Common.EventArgs;
 
 namespace MetroLive.Common
 {
     //main interface for all logic operations
     public class MetroLiveCore
     {
+        public event EventHandler<DownloadProgEventArgs> downloadProg;
+
         public SettingsManager SettingsMgr { get; set; }
 
         private SiriManager siriMgr { get; set; }
@@ -27,7 +29,14 @@ namespace MetroLive.Common
             this.siriMgr = mSiriMgr;
             this.fileMgr = mFileMgr;
 
+            GTFSData.downloadProg += GTFSData_downloadProg;
+
             this.SettingsMgr = new SettingsManager(mFileMgr);
+        }
+
+        private void GTFSData_downloadProg(object sender, DownloadProgEventArgs e)
+        {
+            downloadProg?.Invoke(this, e);
         }
 
         public async Task StartUp()
@@ -49,6 +58,16 @@ namespace MetroLive.Common
         public List<FavouriteStop> GetFavStops()
         {
             return SettingsMgr.Settings.FavStops;
+        }
+
+        public async Task<bool> IsTimeTableUptoDate()
+        {
+            return await GTFSData.IsTimeTableUptoDate();
+        }
+
+        public async Task<bool> DownloadTimeTable()
+        {
+            return await GTFSData.DownloadTimeTable();
         }
     }
 }

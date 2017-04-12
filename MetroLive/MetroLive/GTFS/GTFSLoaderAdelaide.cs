@@ -17,6 +17,7 @@ namespace MetroLive.GTFS
 
         }
 
+        /*
         public async Task LoadSchedule()
         {
             HttpClient httpClient = new HttpClient();
@@ -27,5 +28,6 @@ namespace MetroLive.GTFS
             //x.
             //System.IO.Compression.ZipFile x;
         }
+        */
     }
 }

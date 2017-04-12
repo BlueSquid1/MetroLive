@@ -11,11 +11,11 @@ namespace MetroLive.Common
         public struct SettingsStruct
         {
             //the earliest bus trip to be fetched from the current time
-            public TimeSpan GTFSStart;
+            public TimeSpan GTFSStart { get; set; }
 
             //the earilest bus trip to be fetched from the current time
-            public TimeSpan SIRIStart;
-            public TimeSpan SIRIPreviewInterval;
+            public TimeSpan SIRIStart { get; set; }
+            public TimeSpan SIRIPreviewInterval { get; set; }
 
             //favourite bus stops
             public List<FavouriteStop> FavStops { get; set; }

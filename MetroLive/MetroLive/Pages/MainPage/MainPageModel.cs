@@ -27,6 +27,20 @@ namespace MetroLive.Pages.MainPage
         }
         private List<FavouriteStop> favStops;
 
+        public bool ShowOverlay
+        {
+            get
+            {
+                return showOverlay;
+            }
+            set
+            {
+                showOverlay = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ShowOverlay"));
+            }
+        }
+        private bool showOverlay;
+
         //constructor
         public MainPageModel()
         {
