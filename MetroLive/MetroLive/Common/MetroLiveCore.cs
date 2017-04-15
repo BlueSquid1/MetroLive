@@ -39,7 +39,7 @@ namespace MetroLive.Common
             downloadProg?.Invoke(this, e);
         }
 
-        public async Task StartUp()
+        public async Task EarlyStartup()
         {
             await SettingsMgr.LoadSettingFromDisk();
         }

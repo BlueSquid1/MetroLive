@@ -52,8 +52,10 @@ namespace MetroLive.GTFS
             }
         }
 
+        //TODO
         public async Task<BusStopDetails> GetBusStopData(string busStopId, DateTimeOffset timeInterval)
         {
+            //get general info about stop
             ZipArchive zipArch = await fileMgr.GetZipFile(archiveFilePath);
             Stream busStopStream = zipArch.GetEntry("stops.txt").Open();
             //Stream to string
@@ -64,7 +66,7 @@ namespace MetroLive.GTFS
         }
 
         
-        public virtual async Task<bool> IsTimeTableUptoDate()
+        public async Task<bool> IsTimeTableUptoDate()
         {
             ZipArchive archive = await fileMgr.GetZipFile(archiveFilePath);
 

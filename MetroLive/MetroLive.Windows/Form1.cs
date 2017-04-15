@@ -31,11 +31,15 @@ namespace MetroLive.Windows
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await metroCore.StartUp();
+            await metroCore.EarlyStartup();
             if (await metroCore.IsTimeTableUptoDate() == false)
             {
                 await metroCore.DownloadTimeTable();
             }
+            BusStopMgr stopMgr = metroCore.GetBusStopDetails("11984");
+            DateTime now = DateTime.Now;
+            DateTime lastMidnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+            BusStopDetails stopDetailsOffline = await stopMgr.GetOfflineDataAsync(new DateTimeOffset(lastMidnight.Ticks, TimeSpan.FromDays(1)));
         }
     }
 }

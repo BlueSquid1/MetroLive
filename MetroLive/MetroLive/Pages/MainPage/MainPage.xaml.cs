@@ -34,7 +34,7 @@ namespace MetroLive.Pages.MainPage
 
         private async void MainPage_Appearing(object sender, EventArgs e)
         {
-            await metroLive.StartUp();
+            await metroLive.EarlyStartup();
 
             mainPageModel.FavStops = this.metroLive.GetFavStops();
 
