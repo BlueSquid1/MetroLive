@@ -39,7 +39,7 @@ namespace MetroLive.Windows
             BusStopMgr stopMgr = metroCore.GetBusStopDetails("11984");
             DateTime now = DateTime.Now;
             DateTime lastMidnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
-            BusStopDetails stopDetailsOffline = await stopMgr.GetOfflineDataAsync(new DateTimeOffset(lastMidnight.Ticks, TimeSpan.FromDays(1)));
+            BusStopDetails stopDetailsOffline = await stopMgr.GetOfflineDataAsync(new DateTime(lastMidnight.Ticks), TimeSpan.FromDays(1));
         }
     }
 }

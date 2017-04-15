@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MetroLive.MetroData;
 using ServiceStack.Text;
 using MetroLive.Common.EventArgs;
+using System.Diagnostics;
 
 namespace MetroLive.GTFS
 {
@@ -52,20 +53,63 @@ namespace MetroLive.GTFS
             }
         }
 
-        //TODO
-        public async Task<BusStopDetails> GetBusStopData(string busStopId, DateTimeOffset timeInterval)
+        public async Task<BusStopDetails> GetBusStopData(string busStopId, DateTime startTime, TimeSpan timeLength)
+        {
+            BusStopDetails stopDetails = new BusStopDetails();
+
+            //get general info about stop
+            TableWithHeader stopTable = await FileContentToTable("stops.txt");
+            StructureWithHeader stopRow = stopTable.GetFirstInstance("stop_code", busStopId);
+
+            string stopId = stopRow.GetField("stop_id");
+
+            stopDetails.StopRef = stopRow.GetField("stop_code");
+            stopDetails.StopPointName = stopRow.GetField("stop_name");
+            stopDetails.busStopX = float.Parse(stopRow.GetField("stop_lat"));
+            stopDetails.busStopY = float.Parse(stopRow.GetField("stop_lon"));
+            //stopDetails.RspTimestamp
+            //stopDetails.Version
+
+            //get route details
+            TableWithHeader stopTimesTable = await FileContentToTable("stop_times.txt"); //4.3 seconds
+            stopTimesTable.SortByColumn("arrival_time"); //5.3 seconds
+            TableWithHeader stopTimesFilter = stopTimesTable.Filter("stop_id", stopId);
+
+            //filter out the entries not in the timespan
+
+
+
+            /*
+            foreach( List<string> row in stopTimesFilter.InterTable)
+            {
+                Debug.WriteLine("trip id = " + row[0] + " arrival time = "  + row[1]);
+            }
+            */
+
+            //Debug.WriteLine(stopTimeRow.GetField("trip_id"));
+
+                return stopDetails;
+        }
+
+        private async Task<TableWithHeader> FileContentToTable(string archiveName)
         {
             //get general info about stop
             ZipArchive zipArch = await fileMgr.GetZipFile(archiveFilePath);
-            Stream busStopStream = zipArch.GetEntry("stops.txt").Open();
+            Stream busStopStream = zipArch.GetEntry(archiveName).Open();
             //Stream to string
             StreamReader streamReader = new StreamReader(busStopStream);
             string busStopCSVString = await streamReader.ReadToEndAsync();
-            List<string> busStopList = CsvReader.ParseLines(busStopCSVString);
-            return new BusStopDetails();
+            List<List<string>> busStopTable = new List<List<string>>();
+            List<string> busStopLines = CsvReader.ParseLines(busStopCSVString);
+
+            List<string> StopHeader = CsvReader.ParseFields(busStopLines[0]);
+            for (int i = 1; i < busStopLines.Count; i++)
+            {
+                busStopTable.Add(CsvReader.ParseFields(busStopLines[i]));
+            }
+            return new TableWithHeader(StopHeader, busStopTable);
         }
 
-        
         public async Task<bool> IsTimeTableUptoDate()
         {
             ZipArchive archive = await fileMgr.GetZipFile(archiveFilePath);

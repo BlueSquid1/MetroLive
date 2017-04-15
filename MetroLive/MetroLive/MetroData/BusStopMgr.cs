@@ -29,9 +29,9 @@ namespace MetroLive.MetroData
             this.sirMgr = mSiriManager;
         }
 
-        public async Task<BusStopDetails> GetOfflineDataAsync(DateTimeOffset timeInterval )
+        public async Task<BusStopDetails> GetOfflineDataAsync(DateTime startTime, TimeSpan timeLength )
         {
-            BusStopDetails stopDataTemp = await gtfsLoader.GetBusStopData( BusStopId, timeInterval );
+            BusStopDetails stopDataTemp = await gtfsLoader.GetBusStopData( BusStopId, startTime, timeLength);
 
             //populate bus stop from GTFS data
 
