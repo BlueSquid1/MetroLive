@@ -43,6 +43,7 @@
     <Compile Include="Common\FileManager.cs" />
     <Compile Include="Common\JsonSeralizer.cs" />
     <Compile Include="GTFS\GTFSLoaderAdelaide.cs" />
+    <Compile Include="GTFS\OpenFile.cs" />
     <Compile Include="GTFS\StructureWithHeader.cs" />
     <Compile Include="GTFS\TableWithHeader.cs" />
     <Compile Include="MetroData\BusStopDetails.cs" />

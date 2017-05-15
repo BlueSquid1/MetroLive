@@ -51,7 +51,7 @@ namespace MetroLive.Common
             string settingsText = await JsonSeralizer.SerializeObject(Settings);
 
             //write string to file
-            await fileMgr.OverwriteFileWithString(SettingsfileTarget, settingsText);
+            await fileMgr.WriteStringToFile(SettingsfileTarget, settingsText);
         }
 
         public async Task LoadSettingFromDisk()
@@ -63,7 +63,7 @@ namespace MetroLive.Common
             {
                 //create a dummy file
                 string defaultSettings = await JsonSeralizer.SerializeObject(Settings);
-                await fileMgr.OverwriteFileWithString(SettingsfileTarget, defaultSettings);
+                await fileMgr.WriteStringToFile(SettingsfileTarget, defaultSettings);
                 return;
             }
 

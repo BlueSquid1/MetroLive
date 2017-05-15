@@ -21,7 +21,11 @@ namespace MetroLive.GTFS
         public StructureWithHeader GetFirstInstance(string columnName, string fieldValue)
         {
             int columnNum = Header.IndexOf(columnName);
-            foreach(List<string> row in InterTable)
+            if (columnNum < 0)
+            {
+                throw new Exception("column name: " + columnName + ", does not exist.");
+            }
+            foreach (List<string> row in InterTable)
             {
                 if(row[columnNum] == fieldValue)
                 {
@@ -36,6 +40,11 @@ namespace MetroLive.GTFS
         {
             List<List<string>> returnRows = new List<List<string>>();
             int columnNum = Header.IndexOf(columnName);
+            if(columnNum < 0)
+            {
+                throw new Exception("column name: " + columnName + ", does not exist.");
+            }
+
             foreach (List<string> row in InterTable)
             {
                 if (row[columnNum] == fieldValue)
@@ -49,6 +58,10 @@ namespace MetroLive.GTFS
         public void SortByColumn(string columnName)
         {
             int columnNum = Header.IndexOf(columnName);
+            if(columnNum < 0)
+            {
+                throw new Exception("column name: " + columnName + ", does not exist.");
+            }
             InterTable = InterTable.OrderBy(i => i[columnNum]).ToList();
         }
     }

@@ -2,6 +2,7 @@
 using MetroLive.SIRI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,8 +32,8 @@ namespace MetroLive.MetroData
 
         public async Task<BusStopDetails> GetOfflineDataAsync(DateTime startTime, TimeSpan timeLength )
         {
-            BusStopDetails stopDataTemp = await gtfsLoader.GetBusStopData( BusStopId, startTime, timeLength);
-
+            BusStopDetails stopDataTemp = null;
+            stopDataTemp = await gtfsLoader.GetBusStopData(BusStopId, startTime, timeLength);
             //populate bus stop from GTFS data
 
             //dump into offiline buffer

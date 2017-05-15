@@ -1,11 +1,13 @@
 ﻿using PCLStorage;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MetroLive.GTFS;
 
 namespace MetroLive.Common
 {
@@ -15,33 +17,115 @@ namespace MetroLive.Common
         protected string filePathRoot;
 
         protected IFileSystem fileSystem;
-        //protected string gtfsFileName = "google_transit.zip";
+        protected List<OpenFile> CachedFiles;
 
         //constructor
         public FileManager(string mFilePath)
         {
+            CachedFiles = new List<OpenFile>();
             this.fileSystem = FileSystem.Current;
             this.filePathRoot = mFilePath;
         }
 
+        //deconstructor
+        ~FileManager()
+        {
+            foreach(OpenFile file in CachedFiles)
+            {
+                file.fileStream.Flush();
+                file.fileStream.Dispose();
+            }
+        }
+
         //will overwrite the existing file if it exists
-        public async Task OverwriteFileWithString(string targetFile, string text)
+        public async Task WriteStringToFile(string targetFile, string text)
+        {
+            //attempt to retrieve file
+            OpenFile activeFile = await GetFileAsync(targetFile);
+
+            IFile updateFile = null;
+            //check if file already exists
+            if (activeFile != null)
+            {
+                //clear from cache
+                CachedFiles.Remove(activeFile);
+                updateFile = activeFile.fileInfo;
+                await activeFile.fileStream.FlushAsync();
+                activeFile.fileStream.Dispose();
+            }
+            else
+            {
+                //create the file
+                string completeFilePath = filePathRoot + targetFile;
+                IFolder root = await fileSystem.GetFolderFromPathAsync("./");
+                updateFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
+            }
+
+            //write content 
+            await updateFile.WriteAllTextAsync(text);
+        }
+
+        public async Task<OpenFile> GetFileAsync(string targetFile, bool writePermission = false)
         {
             string completeFilePath = filePathRoot + targetFile;
 
-            IFile activeFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
-            //check if file actually exists
-            if (activeFile == null)
+            //first check if file in in cache
+            foreach (OpenFile file in CachedFiles)
             {
-                //create file
-                IFolder root = await fileSystem.GetFolderFromPathAsync("./");
-                activeFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
+                if( file.fileInfo.Path == completeFilePath)
+                {
+                    //read file from start
+                    file.fileStream.Seek(0, SeekOrigin.Begin);
+                    //found file in cache
+                    return file;
+                }
             }
 
-            //write content
-            await activeFile.WriteAllTextAsync(text);
+            //check if file already exists
+            FileAccess fileAccess = FileAccess.Read;
+            if(writePermission == true)
+            {
+                fileAccess = FileAccess.ReadAndWrite;
+            }
+            IFile activeFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
+            if(activeFile != null)
+            {
+                Stream fileStream = await activeFile.OpenAsync(fileAccess);
+                fileStream.Seek(0, SeekOrigin.Begin);
+                OpenFile openFile = new OpenFile(activeFile, fileStream);
+                CachedFiles.Add(openFile);
+                return openFile;
+            }
+
+            //failed to find the file
+            return null;
         }
 
+        /*
+        public Task CreateUpdateFileAsync()
+        {
+            //check if file in in cache
+            foreach (OpenFile file in CachedFiles)
+            {
+                if (file.fileInfo.Path == path)
+                {
+                    file.fileStream.Seek(0, SeekOrigin.Begin);
+                    //found file in cache
+                    return file;
+                }
+            }
+
+            //create the file
+            IFolder root = await fileSystem.GetFolderFromPathAsync("./");
+            activeFile = await root.CreateFileAsync(path, CreationCollisionOption.FailIfExists);
+            Stream newFileStream = await activeFile.OpenAsync(FileAccess.ReadAndWrite);
+            OpenFile newOpenFile = new OpenFile(activeFile, newFileStream);
+            CachedFiles.Add(newOpenFile);
+            return newOpenFile;
+        }
+        */
+
+        
         public async Task<string> ReadStringFromFile(string targetFile)
         {
             string completeFilePath = filePathRoot + targetFile;
@@ -55,48 +139,16 @@ namespace MetroLive.Common
 
             return await file.ReadAllTextAsync();
         }
+        
 
-        public async Task<bool> WriteStreamToArchive(string targetFile, Stream mFileStream)
-        {
-            string completeFilePath = filePathRoot + targetFile;
-            IFile archiveFile = null;
-            try
-            {
-                archiveFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
-
-                //check if file actually exists
-                if (archiveFile == null)
-                {
-                    //create file
-                    IFolder root = await fileSystem.GetFolderFromPathAsync("./");
-                    archiveFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
-                }
-
-                //dump archive into file
-                Stream fileStream = await archiveFile.OpenAsync(FileAccess.ReadAndWrite);
-                await mFileStream.CopyToAsync(fileStream);
-                await fileStream.FlushAsync();
-                fileStream.Dispose();
-            }
-            catch
-            {
-                if (archiveFile != null)
-                {
-                    //delete the corrupt file
-                    await archiveFile.DeleteAsync();
-                }
-                return false;
-            }
-            return true;
-        }
-
+        /*
         public async Task<ZipArchive> GetZipFile(string archiveName)
         {
             string completeFilePath = filePathRoot + archiveName;
 
             IFile file = await fileSystem.GetFileFromPathAsync(completeFilePath);
 
-            if( file == null )
+            if ( file == null )
             {
                 return null;
             }
@@ -117,6 +169,8 @@ namespace MetroLive.Common
             return catchedArchive;
 
         }
+        */
+        
 
         /*
         public async Task<ZipArchiveEntry> GetArchiveEntryAsync(string fileName)

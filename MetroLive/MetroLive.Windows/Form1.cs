@@ -32,6 +32,7 @@ namespace MetroLive.Windows
         private async void Form1_Load(object sender, EventArgs e)
         {
             await metroCore.EarlyStartup();
+
             if (await metroCore.IsTimeTableUptoDate() == false)
             {
                 await metroCore.DownloadTimeTable();

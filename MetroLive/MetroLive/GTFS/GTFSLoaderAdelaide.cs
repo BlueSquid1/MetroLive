@@ -12,7 +12,10 @@ namespace MetroLive.GTFS
     public class GTFSLoaderAdelaide : GTFSLoader
     {
         //constructor
-        public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://adelaidemetro.com.au/GTFS/google_transit.zip")
+        //http://adelaidemetro.com.au/GTFS/google_transit.zip
+        //https://drive.google.com/open?id=0B05c7VIZLKVQTDlwRmYzaDlQY0E
+        //http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip
+        public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip")
         {
 
         }
