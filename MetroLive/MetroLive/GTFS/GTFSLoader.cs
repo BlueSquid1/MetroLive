@@ -22,13 +22,15 @@ namespace MetroLive.GTFS
         private string GTFSBaseUrl;
         private FileManager fileMgr;
         private string archiveFilePath;
+        private bool useUncompressedGTFS = false;
 
         //constructor
-        public GTFSLoader(FileManager mFileMgr, string baseUrl)
+        public GTFSLoader(FileManager mFileMgr, string baseUrl, bool mUseUncompressedGTFS = false)
         {
             this.fileMgr = mFileMgr;
             this.GTFSBaseUrl = baseUrl;
             archiveFilePath = "GTFSLoader.zip";
+            this.useUncompressedGTFS = mUseUncompressedGTFS;
         }
 
         public async Task<bool> DownloadTimeTable()
@@ -43,7 +45,21 @@ namespace MetroLive.GTFS
                 GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
                 var y = new StreamReader(GTFSCompressed);
                 string x = y.ReadToEnd();
-                await fileMgr.WriteStringToFile(archiveFilePath, x);
+                if (this.useUncompressedGTFS == false)
+                {
+                    await fileMgr.WriteStringToFile(archiveFilePath, x);
+                }
+                else
+                {
+                    var z = new ZipArchive(GTFSCompressed, ZipArchiveMode.Read);
+                    foreach(var fileEntity in z.Entries)
+                    {
+                        var fileStream = fileEntity.Open();
+                        var fileReader = new StreamReader(fileStream);
+                        string fileString = await fileReader.ReadToEndAsync();
+                        await fileMgr.WriteStringToFile("GTFSLoader/" + fileEntity.FullName, fileString);
+                    }
+                }
                 return true;
             }
             catch
@@ -83,15 +99,9 @@ namespace MetroLive.GTFS
             {
                 foreach (string field in stopTimesFilter.InterTable[i])
                 {
-
+                    Debug.WriteLine(field);
                 }
             }
-            /*
-            foreach( List<string> row in stopTimesFilter.InterTable)
-            {
-
-            }
-            */
 
             //stopDetails.IncomingVehicles.Add()
 
@@ -124,19 +134,20 @@ namespace MetroLive.GTFS
 
         public async Task<bool> IsTimeTableUptoDate()
         {
-            ZipArchive archive = await this.GetZipFile(archiveFilePath);
-
-            if(archive == null)
+            if (this.useUncompressedGTFS == false)
             {
-                return false;
+                ZipArchive archive = await this.GetZipFile(archiveFilePath);
+
+                if (archive == null)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return await fileMgr.DoesFolderExist("./GTFSLoader");
             }
 
-            /*
-            Stream feedInfoStream = archive.GetEntry("feed_info.txt").Open();
-            StreamReader streamReader = new StreamReader(feedInfoStream);
-            string feedInfoCSVString = await streamReader.ReadToEndAsync();
-            List<string> feedInfoList = CsvReader.ParseLines(feedInfoCSVString);
-            */
             return true;
         }
 

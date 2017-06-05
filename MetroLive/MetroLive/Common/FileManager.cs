@@ -37,6 +37,12 @@ namespace MetroLive.Common
             }
         }
 
+        public async Task<bool> DoesFolderExist(string path)
+        {
+            IFolder gtfsFolder = await this.fileSystem.GetFolderFromPathAsync(path);
+            return gtfsFolder != null;
+        }
+
         //will overwrite the existing file if it exists
         public async Task WriteStringToFile(string targetFile, string text)
         {
@@ -101,29 +107,6 @@ namespace MetroLive.Common
             return null;
         }
 
-        /*
-        public Task CreateUpdateFileAsync()
-        {
-            //check if file in in cache
-            foreach (OpenFile file in CachedFiles)
-            {
-                if (file.fileInfo.Path == path)
-                {
-                    file.fileStream.Seek(0, SeekOrigin.Begin);
-                    //found file in cache
-                    return file;
-                }
-            }
-
-            //create the file
-            IFolder root = await fileSystem.GetFolderFromPathAsync("./");
-            activeFile = await root.CreateFileAsync(path, CreationCollisionOption.FailIfExists);
-            Stream newFileStream = await activeFile.OpenAsync(FileAccess.ReadAndWrite);
-            OpenFile newOpenFile = new OpenFile(activeFile, newFileStream);
-            CachedFiles.Add(newOpenFile);
-            return newOpenFile;
-        }
-        */
 
         
         public async Task<string> ReadStringFromFile(string targetFile)

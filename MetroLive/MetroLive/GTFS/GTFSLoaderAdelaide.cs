@@ -15,7 +15,7 @@ namespace MetroLive.GTFS
         //http://adelaidemetro.com.au/GTFS/google_transit.zip
         //https://drive.google.com/open?id=0B05c7VIZLKVQTDlwRmYzaDlQY0E
         //http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip
-        public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip")
+        public GTFSLoaderAdelaide(FileManager mFileMgr, bool mUseUncompressedGTFS = false) : base(mFileMgr, "http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip", mUseUncompressedGTFS)
         {
 
         }

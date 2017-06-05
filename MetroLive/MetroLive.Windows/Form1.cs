@@ -22,11 +22,13 @@ namespace MetroLive.Windows
         public Form1()
         {
             InitializeComponent();
-
+            
             FileManager fileMgr = new FileManagerWindows();
             SiriManager siriMgr = new SiriMgrAdelaide();
-            GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
+            bool useUncompressedGTFS = true;
+            GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr, useUncompressedGTFS);
             metroCore = new MetroLiveCore(fileMgr, gtfsLoader, siriMgr);
+            
         }
 
         private async void Form1_Load(object sender, EventArgs e)
