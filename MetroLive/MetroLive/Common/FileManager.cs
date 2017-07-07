@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MetroLive.GTFS;
+using System.Threading;
 
 namespace MetroLive.Common
 {
@@ -16,14 +17,14 @@ namespace MetroLive.Common
         //default file path
         protected string filePathRoot;
 
-        protected IFileSystem fileSystem;
+        protected FileSystemFolder fileSystem;
         protected List<OpenFile> CachedFiles;
 
         //constructor
         public FileManager(string mFilePath)
         {
             CachedFiles = new List<OpenFile>();
-            this.fileSystem = FileSystem.Current;
+            this.fileSystem = new FileSystemFolder("./");
             this.filePathRoot = mFilePath;
         }
 
@@ -39,7 +40,7 @@ namespace MetroLive.Common
 
         public async Task<bool> DoesFolderExist(string path)
         {
-            IFolder gtfsFolder = await this.fileSystem.GetFolderFromPathAsync(path);
+            IFolder gtfsFolder = await this.fileSystem.GetFolderAsync(path, new CancellationToken());
             return gtfsFolder != null;
         }
 
@@ -63,7 +64,7 @@ namespace MetroLive.Common
             {
                 //create the file
                 string completeFilePath = filePathRoot + targetFile;
-                IFolder root = await fileSystem.GetFolderFromPathAsync("./");
+                IFolder root = await fileSystem.GetFolderAsync("./", new CancellationToken());
                 updateFile = await root.CreateFileAsync(completeFilePath, CreationCollisionOption.FailIfExists);
             }
 
@@ -88,12 +89,12 @@ namespace MetroLive.Common
             }
 
             //check if file already exists
-            FileAccess fileAccess = FileAccess.Read;
+            PCLStorage.FileAccess fileAccess = PCLStorage.FileAccess.Read;
             if(writePermission == true)
             {
-                fileAccess = FileAccess.ReadAndWrite;
+                fileAccess = PCLStorage.FileAccess.ReadAndWrite;
             }
-            IFile activeFile = await fileSystem.GetFileFromPathAsync(completeFilePath);
+            IFile activeFile = await fileSystem.GetFileAsync(completeFilePath, new CancellationToken());
             if(activeFile != null)
             {
                 Stream fileStream = await activeFile.OpenAsync(fileAccess);
@@ -113,7 +114,7 @@ namespace MetroLive.Common
         {
             string completeFilePath = filePathRoot + targetFile;
 
-            IFile file = await fileSystem.GetFileFromPathAsync(completeFilePath);
+            IFile file = await fileSystem.GetFileAsync(completeFilePath, new CancellationToken());
 
             if(file == null)
             {
