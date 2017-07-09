@@ -55,7 +55,6 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="2.3.5.256-pre6" />
     <PackageReference Include="PCLStorage.Standard" Version="1.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="ServiceStack.Text.Core" Version="1.0.43" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>

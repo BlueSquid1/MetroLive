@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="Services\Realtime\" />
+    <Folder Include="Services\Realtime\SIRI\" />
+    <Folder Include="Util\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Text.Core" Version="1.0.43" />
+  </ItemGroup>
+</Project>
