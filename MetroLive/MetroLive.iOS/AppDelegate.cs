@@ -5,6 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 using System.IO;
+using MetroLive.Services.Offline;
 
 namespace MetroLive.iOS
 {
@@ -27,8 +28,7 @@ namespace MetroLive.iOS
 
             string docFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string rootPath = Path.Combine(docFolder, "..", "Library", "Databases");
-            FileManageriOS fileMgr = new FileManageriOS(rootPath);
-
+            FileManager fileMgr = new FileManager(rootPath);
             LoadApplication(new App( fileMgr ));
 
             return base.FinishedLaunching(app, options);

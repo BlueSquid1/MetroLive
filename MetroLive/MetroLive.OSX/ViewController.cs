@@ -1,8 +1,10 @@
 ﻿using System;
-
+using System.IO;
+using System.Net;
 using AppKit;
 using Foundation;
-using MetroLive.Realtime.SIRI;
+using MetroLive.Services.Offline;
+using MetroLive.Services.Offline.GTFS;
 
 namespace MetroLive.OSX
 {
@@ -10,6 +12,7 @@ namespace MetroLive.OSX
     {
         public ViewController(IntPtr handle) : base(handle)
         {
+            Console.WriteLine("startup");
         }
 
         public override void ViewDidLoad()
@@ -34,8 +37,14 @@ namespace MetroLive.OSX
 
 		async partial void TestButtonClicked(NSObject sender)
 		{
-            var x = new SiriMgrAdelaide();
-            await x.GetStopDataAsync("11984", new DateTimeOffset(DateTime.Now.Ticks, TimeSpan.FromMinutes(60)));
+            string url = "http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip";
+
+            string rootPath = Environment.CurrentDirectory + "/";
+
+            FileManager fileMgr = new FileManager(rootPath);
+            GTFSLoaderAdelaide x = new GTFSLoaderAdelaide(fileMgr);
+            await x.UpdateAsync();
+
 		}
     }
 }

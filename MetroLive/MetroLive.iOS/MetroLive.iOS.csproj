@@ -102,7 +102,6 @@
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
     <None Include="packages.config" />
-    <Compile Include="FileManageriOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -165,9 +164,9 @@
     <BundleResource Include="Resources\star_empty.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetroLive\MetroLive.csproj">
-      <Project>{63814B95-A7D3-41DD-AAF9-959AA0F17860}</Project>
-      <Name>MetroLive</Name>
+    <ProjectReference Include="..\..\Core\MetroLive.Core.csproj">
+      <Project>{0D5CCA03-F380-4E99-B233-81E6D5931DAC}</Project>
+      <Name>MetroLive.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

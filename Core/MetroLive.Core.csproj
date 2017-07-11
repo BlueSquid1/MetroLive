@@ -12,8 +12,29 @@
     <Folder Include="Services\Realtime\" />
     <Folder Include="Services\Realtime\SIRI\" />
     <Folder Include="Util\" />
+    <Folder Include="Services\Offline\" />
+    <Folder Include="Services\Offline\GTFS\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ServiceStack.Text.Core" Version="1.0.43" />
+    <PackageReference Include="Xamarin.Forms" Version="2.3.5.256-pre6" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MainPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\MainPage.xaml.cs">
+      <DependentUpon>..\..\MetroLive\MetroLive\MetroLive\Pages\MainPage\MainPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

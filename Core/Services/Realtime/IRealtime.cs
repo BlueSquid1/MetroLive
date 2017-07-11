@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using MetroLive.Models;
 
-namespace MetroLive.Realtime
+namespace MetroLive.Services.Realtime
 {
     public interface IRealtime
     {
-		Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTimeOffset timeRange, bool forceRefresh = false);
+        Task<BusStopDetails> GetStopDataAsync(string StopRef, TimeSpan timeLength, bool forceRefresh = false);
     }
 }
