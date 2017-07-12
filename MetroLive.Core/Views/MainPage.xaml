@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="MetroLive"
+             x:Class="MetroLive.Views.MainPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+            iOS="0, 40, 0, 0"
+            Android="0, 0, 0, 0"
+            WinPhone="0, 0, 0, 0" />
+    </ContentPage.Padding>
+    <StackLayout>
+        <Label x:Name="testLb" Text="Default"/>
+    </StackLayout>
+    <!--<AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+            <SearchBar Placeholder="Enter stop name or stop id"
+                   SearchButtonPressed="OnSearch"
+                   Text="11984" />
+            <ScrollView>
+                <StackLayout HorizontalOptions="FillAndExpand"
+                         Orientation="Vertical"
+                         Spacing="15">
+                    <ListView x:Name="favListView" 
+                      RowHeight="70"
+                      ItemSelected="OnSelectedItem"
+                      HeightRequest="700"
+                      ItemsSource="{Binding FavStops}"
+                           >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+    
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="{Binding StopId}" 
+                                        VerticalTextAlignment="Center"
+                                        HorizontalTextAlignment="Center"
+                                        FontSize="Medium"
+                                        Grid.Row="0"
+                                        Grid.Column="0">
+                                        </Label>
+
+                                        <Label Text="{Binding CustomName}"
+                                            VerticalTextAlignment="Center"
+                                            HorizontalTextAlignment="Center"
+                                            FontSize="Medium"
+                                            Grid.Row="0"
+                                            Grid.Column="1">
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+        <ContentView AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     IsVisible="{Binding ShowOverlay}"
+                     BackgroundColor="#C0808080"
+                     Padding="10, 0">
+            <ProgressBar x:Name="progressBar"
+                         VerticalOptions="Center" />
+        </ContentView>
+    </AbsoluteLayout>-->
+
+</ContentPage>
