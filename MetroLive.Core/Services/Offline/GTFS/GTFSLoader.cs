@@ -12,21 +12,35 @@ using MetroLive.Models;
 
 namespace MetroLive.Services.Offline.GTFS
 {
+    public class OpenArchive
+    {
+		public string completePath;
+		public ZipArchive zip;
+
+        //constructor
+        public OpenArchive( string mCompletePath, ZipArchive mZip)
+        {
+            this.completePath = mCompletePath;
+            this.zip = mZip;
+        }
+
+    }
 	public class GTFSLoader //: IOffline
 	{
 		public event EventHandler<DownloadProgEventArgs> DownloadProg;
 
-
 		private string GTFSBaseUrl;
 		private FileManager fileMgr;
-		private string archiveFilePath;
+        private string archiveFileName;
+        private List<OpenArchive> bufferedArchives;
 
 		//constructor
 		public GTFSLoader(FileManager mFileMgr, string baseUrl)
 		{
+            this.bufferedArchives = new List<OpenArchive>();
 			this.fileMgr = mFileMgr;
 			this.GTFSBaseUrl = baseUrl;
-			archiveFilePath = "GTFSLoader.zip";
+			this.archiveFileName = "GTFSLoader.zip";
 		}
 
         //assume file length is less than 4Gb
@@ -62,7 +76,7 @@ namespace MetroLive.Services.Offline.GTFS
 			{
                 Console.WriteLine("downloading GTFS");
                 byte[] gtfsFile = await this.DownloadGTFS();
-				fileMgr.WriteBytesToFile(archiveFilePath, gtfsFile);
+				await fileMgr.WriteBytesToFileAsync(archiveFileName, gtfsFile);
 				Console.WriteLine("done writing file");
 				return true;
 			}
@@ -88,73 +102,46 @@ namespace MetroLive.Services.Offline.GTFS
 			return steamContent;
 		}
 
-		public Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTime timeStart, DateTime timeEnd, bool forceRefresh = false)
+
+		public async Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTime timeStart, DateTime timeEnd, bool forceRefresh = false)
 		{
-			throw new NotImplementedException();
-		}
-
-		/*
-        public async Task<BusStopDetails> GetBusStopData(string busStopId, DateTime startTime, TimeSpan timeLength)
-        {
-            BusStopDetails stopDetails = new BusStopDetails();
-            //first load tables into RAM
-
-            //stops.csv contains general info about the stop
-            TableWithHeader stopTable = await FileContentToTable("stops.csv");
-            //stop_times.csv contains the bus trips and their respected times
-            TableWithHeader stopTimesTable = await FileContentToTable("stop_times.csv");
-
-            //write down general info about the stop
-            StructureWithHeader stopRow = stopTable.GetFirstInstance("stop_code", busStopId);
-            string stopId = stopRow.GetField("stop_id");
-            stopDetails.StopRef = stopRow.GetField("stop_code");
-            stopDetails.StopPointName = stopRow.GetField("stop_name");
-            stopDetails.busStopX = float.Parse(stopRow.GetField("stop_lat"));
-            stopDetails.busStopY = float.Parse(stopRow.GetField("stop_lon"));
-            //stopDetails.RspTimestamp
-            //stopDetails.Version
-
-            //get bus time info
-            TableWithHeader stopTimesFilter = stopTimesTable.Filter("stop_id", stopId);
-
-            //move results to return object
-            for (int i = 1; i < stopTimesFilter.InterTable.Count; i++)
+            //check if its in the buffer
+            OpenArchive gtfsArchive = GetArchiveFromBuffer(this.archiveFileName);
+            if (gtfsArchive == null)
             {
-                foreach (string field in stopTimesFilter.InterTable[i])
-                {
-                    Debug.WriteLine(field);
-                }
+                string completePath = this.fileMgr.FilePathRoot + this.archiveFileName;
+                ZipArchive zipFile = this.fileMgr.GetZipFile(this.archiveFileName);
+                gtfsArchive = new OpenArchive(completePath, zipFile);
+                this.bufferedArchives.Add(gtfsArchive);
             }
 
-            //stopDetails.IncomingVehicles.Add()
+            using(Stream stopsStream = gtfsArchive.zip.GetEntry("stops.csv").Open())
+            {
+                
+                //ServiceStack.Text.CsvSerializer.DeserializeFromStream(stopsStream);
+            }
+
+            BusStopDetails stopDetails = new BusStopDetails();
 
             return stopDetails;
-        }
+		}
 
-        private async Task<TableWithHeader> FileContentToTable(string archiveName)
+        private OpenArchive GetArchiveFromBuffer(string fileArchive)
         {
-            //get general info about stop
-            ZipArchive zipArch = await this.GetZipFile(archiveFilePath);
-            ZipArchiveEntry zipArchiveEntry = zipArch.GetEntry(archiveName);
-            if(zipArchiveEntry == null)
-            {
-                throw new Exception("failed to find " + archiveName + " in the archive.");
-            }
-            Stream busStopStream = zipArch.GetEntry(archiveName).Open();
-            //Stream to string
-            StreamReader streamReader = new StreamReader(busStopStream);
-            string busStopCSVString = await streamReader.ReadToEndAsync();
-            List<List<string>> busStopTable = new List<List<string>>();
-            List<string> busStopLines = CsvReader.ParseLines(busStopCSVString);
-
-            List<string> StopHeader = CsvReader.ParseFields(busStopLines[0]);
-            for (int i = 1; i < busStopLines.Count; i++)
-            {
-                busStopTable.Add(CsvReader.ParseFields(busStopLines[i]));
-            }
-            return new TableWithHeader(StopHeader, busStopTable);
+            string completePath = this.fileMgr.FilePathRoot + fileArchive;
+			//check if archive file is in buffer
+			foreach (OpenArchive zipArchive in this.bufferedArchives)
+			{
+				if (zipArchive.completePath == completePath)
+				{
+					return zipArchive;
+				}
+			}
+            //failed to find archive in buffer
+            return null;
         }
 
+		/*
         public async Task<bool> IsTimeTableUptoDate()
         {
             if (this.useUncompressedGTFS == false)
@@ -172,25 +159,6 @@ namespace MetroLive.Services.Offline.GTFS
             }
 
             return true;
-        }
-
-        public async Task<ZipArchive> GetZipFile(string zipFileName)
-        {
-            OpenFile zipFile = await fileMgr.GetFileAsync(zipFileName);
-
-            Stream zipStream = zipFile.fileStream;
-            ZipArchive catchedArchive = null;
-            try
-            {
-                catchedArchive = new ZipArchive(zipStream);
-            }
-            catch (Exception e)
-            {
-                //failed to load zip file
-                throw new Exception("Failed to load zip file.");
-            }
-
-            return catchedArchive;
         }
         */
 	}
