@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ServiceStack.Text;
 using System.Diagnostics;
 using MetroLive.Models;
+using MetroLive.Services.Offline.GTFS.GTFSModels;
 
 namespace MetroLive.Services.Offline.GTFS
 {
@@ -33,6 +34,9 @@ namespace MetroLive.Services.Offline.GTFS
 		private FileManager fileMgr;
         private string archiveFileName;
         private List<OpenArchive> bufferedArchives;
+        private List<StopModel> stopsList = null;
+        private List<TripModel> tripList = null;
+        private List<RouteModel> routeList = null;
 
 		//constructor
 		public GTFSLoader(FileManager mFileMgr, string baseUrl)
@@ -115,16 +119,116 @@ namespace MetroLive.Services.Offline.GTFS
                 this.bufferedArchives.Add(gtfsArchive);
             }
 
-            using(Stream stopsStream = gtfsArchive.zip.GetEntry("stops.csv").Open())
-            {
-                
-                //ServiceStack.Text.CsvSerializer.DeserializeFromStream(stopsStream);
-            }
+            //get stop id
+            //find stop id from stop name or stop code
+            StopModel stopObj = GetStopFromStopRef(gtfsArchive, StopRef);
 
-            BusStopDetails stopDetails = new BusStopDetails();
+
+            //get expected trips at stop
+            List<TripTimesModel> trips = GetTripsFromStopId(gtfsArchive,stopObj.stop_id, timeStart, timeEnd);
+
+
+			//fill in the details
+			BusStopDetails stopDetails = new BusStopDetails();
+
+            stopDetails.StopId = stopObj.stop_id;
+            stopDetails.StopRef = stopObj.stop_code;
+            stopDetails.StopPointName = stopObj.stop_name;
+            stopDetails.busStopX = stopObj.stop_lat;
+            stopDetails.busStopY = stopObj.stop_lon;
+
+            foreach(TripTimesModel trip in trips)
+            {
+                //details from trip times
+                VehicleJourney vehicleJourney = new VehicleJourney();
+                TimeSpan startTime = timeStart.TimeOfDay;
+                TimeSpan endTime = timeEnd.TimeOfDay;
+                TimeSpan tripArrivalTime = GetTimeSpanFromString(trip.departure_time);
+                DateTime startOfDate = timeStart.Date;
+                startOfDate = startOfDate.Add(tripArrivalTime);
+
+                vehicleJourney.TripId = trip.trip_id;
+                vehicleJourney.AimedArrival = startOfDate;
+                vehicleJourney.ConfidenceLevel = 3; //not real time
+
+
+				//get more details from trip.csv
+				TripModel tripDetails = GetTripFromTripId(gtfsArchive, trip.trip_id);
+                vehicleJourney.DirrectionAway = tripDetails.direction_id == 1;
+
+				//get more details from routes.csv
+				RouteModel routeDetails = GetRouteFromRouteId( gtfsArchive, tripDetails.route_id);
+                vehicleJourney.LineRef = routeDetails.route_short_name;
+
+                stopDetails.IncomingVehicles.Add(vehicleJourney);
+            }
 
             return stopDetails;
 		}
+
+		protected StopModel GetStopFromStopRef(OpenArchive gtfsArchive, string stopRef)
+        {
+            if (stopsList == null)
+            {
+                using (Stream stopsStream = gtfsArchive.zip.GetEntry("google_transit/stops.csv").Open())
+                {
+                    stopsList = CsvSerializer.DeserializeFromStream<List<StopModel>>(stopsStream);
+                }
+            }
+
+            StopModel stopObj = stopsList.FirstOrDefault(o => o.stop_code == stopRef);
+            return stopObj;
+        }
+
+        protected List<TripTimesModel> GetTripsFromStopId(OpenArchive gtfsArchive, int stopId, DateTime timeStart, DateTime timeEnd)
+        {
+            List<TripTimesModel> trips;
+            using (Stream timeStream = gtfsArchive.zip.GetEntry("google_transit/stop_times.csv").Open())
+			{
+                trips = CsvSerializer.DeserializeFromStream<List<TripTimesModel>>(timeStream);
+			}
+            List<TripTimesModel> tripsAtStop = trips.Where(o => o.stop_id == stopId).ToList();
+            return tripsAtStop;
+        }
+
+
+        protected TripModel GetTripFromTripId(OpenArchive gtfsArchive, int tripId)
+        {
+            if(tripList == null)
+            {
+                using (Stream tripStream = gtfsArchive.zip.GetEntry("google_transit/trips.csv").Open())
+				{
+					tripList = CsvSerializer.DeserializeFromStream<List<TripModel>>(tripStream);
+				}
+            }
+
+            TripModel tripDetails = tripList.FirstOrDefault(o => o.trip_id == tripId);
+			return tripDetails;
+        }
+
+        protected RouteModel GetRouteFromRouteId(OpenArchive gtfsArchive, string routeId)
+        {
+			if (routeList == null)
+			{
+				using (Stream routeStream = gtfsArchive.zip.GetEntry("google_transit/routes.csv").Open())
+				{
+					routeList = CsvSerializer.DeserializeFromStream<List<RouteModel>>(routeStream);
+				}
+			}
+
+            RouteModel routeDetails = routeList.FirstOrDefault(o => o.route_id == routeId);
+			return routeDetails;
+        }
+
+		protected TimeSpan GetTimeSpanFromString(string timeString)
+        {
+            //timeString has the format
+            //"13:26:38"
+            List<string> timeParts = timeString.Split(':').ToList();
+            TimeSpan time = new TimeSpan(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]));
+            return time;
+		}
+
 
         private OpenArchive GetArchiveFromBuffer(string fileArchive)
         {

@@ -4,6 +4,8 @@ namespace MetroLive.Models
 {
     public class VehicleJourney
     {
+        public int TripId { get; set; }
+
         //metadata
         public DateTime? RecordedAt { get; set; } //time this message was created
         public DateTime? ValidUntil { get; set; } //time message is valid till

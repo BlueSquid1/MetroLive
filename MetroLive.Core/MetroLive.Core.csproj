@@ -13,6 +13,7 @@
     <Folder Include="Services\" />
     <Folder Include="Util\" />
     <Folder Include="Views\" />
+    <Folder Include="Services\Offline\GTFS\GTFSModels\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">

@@ -5,6 +5,8 @@ namespace MetroLive.Models
 {
     public class BusStopDetails
     {
+        public int StopId { get; set; }
+
         //bus stop reference number
         public string StopRef { get; set; }
 
