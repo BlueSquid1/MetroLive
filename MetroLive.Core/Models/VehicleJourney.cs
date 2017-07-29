@@ -2,7 +2,7 @@
 
 namespace MetroLive.Models
 {
-    public class VehicleJourney
+    public class VehicleJourney : IComparable<VehicleJourney>
     {
         public int TripId { get; set; }
 
@@ -16,8 +16,24 @@ namespace MetroLive.Models
         public bool? DirrectionAway { get; set; } //dirrection is going away from the city
         public string LineRef { get; set; }
         public DateTime? AimedArrival { get; set; } //does not take into account real time data
-        public DateTime? EarliestEstimatedArrival { get; set; } //takes into account real time data
-        public DateTime? LatestEstimatedArrival { get; set; } //takes into account real time data
+
+        private DateTime? estimatedArrival = null;
+        public DateTime? EstimatedArrival //takes into account real time data
+		{ 
+            get
+            {
+                if(estimatedArrival == null)
+                {
+                    return AimedArrival;
+                }
+                return estimatedArrival;
+            }
+
+            set
+            {
+                estimatedArrival = value;
+            }
+        }
 
 
         //vehicle details
@@ -25,5 +41,26 @@ namespace MetroLive.Models
         public string DriverRef { get; set; }
         public string VehicleRef { get; set; }
 
+        public int CompareTo(VehicleJourney other)
+        {
+			// If other is not a valid object reference, this instance is greater.
+			if (other == null)
+			{
+				return 1;
+			}
+
+			if (this.EstimatedArrival > other.EstimatedArrival)
+			{
+				return 1;
+			}
+			else if (this.EstimatedArrival < other.EstimatedArrival)
+			{
+				return -1;
+			}
+			else
+			{
+				return 0;
+			}
+        }
     }
 }

@@ -76,8 +76,7 @@ namespace MetroLive.Services.Realtime.SIRI
                 incomingVehicle.DirrectionAway = stopVisit.GetByBPath<string>("DirectionRef/Value") == "O" ? true : false;
                 incomingVehicle.LineRef = stopVisit.GetByBPath<string>("LineRef/Value");
                 incomingVehicle.AimedArrival = GetLocalDateTime(busMonitoredCall.Get("AimedArrivalTime"));
-                incomingVehicle.EarliestEstimatedArrival = GetLocalDateTime(busMonitoredCall.Get("LatestExpectedArrivalTime"));
-                incomingVehicle.LatestEstimatedArrival = GetLocalDateTime(busMonitoredCall.Get("LatestExpectedArrivalTime"));
+                incomingVehicle.EstimatedArrival = GetLocalDateTime(busMonitoredCall.Get("LatestExpectedArrivalTime"));
                 incomingVehicle.DriverName = stopVisit.Get("DriverName");
                 incomingVehicle.DriverRef = stopVisit.Get("DriverRef");
                 incomingVehicle.VehicleRef = stopVisit?.GetByBPath<string>("VehicleRef/Value");

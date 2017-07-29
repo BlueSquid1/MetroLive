@@ -55,6 +55,7 @@ namespace MetroLive.Services.Offline
             FileStream fileStream = fileInfo.Open(FileMode.Open, FileAccess.Read);
 			ZipArchive zipArchive = new ZipArchive(fileStream);
 			return zipArchive;
+			
         }
     }
 }

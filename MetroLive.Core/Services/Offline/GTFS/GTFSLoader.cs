@@ -6,10 +6,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using ServiceStack.Text;
 using System.Diagnostics;
 using MetroLive.Models;
 using MetroLive.Services.Offline.GTFS.GTFSModels;
+using ServiceStack.Text;
 
 namespace MetroLive.Services.Offline.GTFS
 {
@@ -24,9 +24,9 @@ namespace MetroLive.Services.Offline.GTFS
             this.completePath = mCompletePath;
             this.zip = mZip;
         }
-
     }
-	public class GTFSLoader //: IOffline
+
+	public class GTFSLoader : IOffline
 	{
 		public event EventHandler<DownloadProgEventArgs> DownloadProg;
 
@@ -36,6 +36,7 @@ namespace MetroLive.Services.Offline.GTFS
         private List<OpenArchive> bufferedArchives;
         private List<StopModel> stopsList = null;
         private List<TripModel> tripList = null;
+        private List<StringEntry> timeStringList = null;
         private List<RouteModel> routeList = null;
 
 		//constructor
@@ -91,21 +92,6 @@ namespace MetroLive.Services.Offline.GTFS
 			}
 		}
 
-		private byte[] ReadBytesAsync(Stream dataStream, int bytesToRead)
-		{
-			Byte[] steamContent = new Byte[bytesToRead];
-			int numBytesProcessed = 0;
-			while (numBytesProcessed < bytesToRead)
-			{
-				//ReadAsync() can return less then intSize therefore keep on looping until intSize is reached
-				byte[] dataBuffer = new Byte[bytesToRead - numBytesProcessed];
-				int bytesRead = dataStream.Read(dataBuffer, 0, bytesToRead - numBytesProcessed);
-				Array.Copy(dataBuffer, 0, steamContent, numBytesProcessed, bytesRead);
-				numBytesProcessed += bytesRead;
-			}
-			return steamContent;
-		}
-
 
 		public async Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTime timeStart, DateTime timeEnd, bool forceRefresh = false)
 		{
@@ -143,7 +129,7 @@ namespace MetroLive.Services.Offline.GTFS
                 VehicleJourney vehicleJourney = new VehicleJourney();
                 TimeSpan startTime = timeStart.TimeOfDay;
                 TimeSpan endTime = timeEnd.TimeOfDay;
-                TimeSpan tripArrivalTime = GetTimeSpanFromString(trip.departure_time);
+                TimeSpan tripArrivalTime = trip.departure_time;
                 DateTime startOfDate = timeStart.Date;
                 startOfDate = startOfDate.Add(tripArrivalTime);
 
@@ -162,7 +148,7 @@ namespace MetroLive.Services.Offline.GTFS
 
                 stopDetails.IncomingVehicles.Add(vehicleJourney);
             }
-
+            stopDetails.IncomingVehicles.Sort();
             return stopDetails;
 		}
 
@@ -182,15 +168,96 @@ namespace MetroLive.Services.Offline.GTFS
 
         protected List<TripTimesModel> GetTripsFromStopId(OpenArchive gtfsArchive, int stopId, DateTime timeStart, DateTime timeEnd)
         {
-            List<TripTimesModel> trips;
-            using (Stream timeStream = gtfsArchive.zip.GetEntry("google_transit/stop_times.csv").Open())
-			{
-                trips = CsvSerializer.DeserializeFromStream<List<TripTimesModel>>(timeStream);
-			}
-            List<TripTimesModel> tripsAtStop = trips.Where(o => o.stop_id == stopId).ToList();
+            if( timeStart > timeEnd )
+            {
+                throw new ArgumentException("The end time must be greater than or equal to the start time");
+            }
+            else if(timeEnd.Subtract(timeStart).TotalDays > 1.0)
+            {
+                throw new ArgumentException("The start and end dates must be less than 1 day appart");
+            }
+            if (this.timeStringList == null)
+            {
+                this.timeStringList = new List<StringEntry>();
+                using (Stream timeStream = gtfsArchive.zip.GetEntry("google_transit/stop_times.csv").Open())
+                {
+					StreamReader timeReader = new StreamReader(timeStream);
+                    //skip header
+                    timeReader.ReadLine();
+					while (timeReader.EndOfStream == false)
+					{
+						string timeLine = timeReader.ReadLine();
+                        this.timeStringList.Add( new StringEntry(timeLine) );
+					}
+                }
+            }
+
+            //binary search this.timeStringList for the valid entries
+            StringEntry stopKey = new StringEntry(stopId.ToString());
+            int index = this.timeStringList.BinarySearch( stopKey );
+
+            if(index < 0 || index > this.timeStringList.Count())
+            {
+                throw new KeyNotFoundException("Failed to find a entry for the stop id:" + stopId.ToString() + " in stop_times.csv");
+            }
+
+            //find the start of this section
+            while(this.timeStringList[index - 1].CompareTo(stopKey) == 0)
+            {
+                --index;
+            }
+
+            List<TripTimesModel> tripsAtStop = new List<TripTimesModel>();
+
+			//populate the return entries
+			while (this.timeStringList[index].CompareTo(stopKey) == 0)
+            {
+                TripTimesModel tripTime = new TripTimesModel();
+                string entry = this.timeStringList[index].Entry;
+                string[] entries = entry.Split(',');
+                tripTime.stop_id = int.Parse(entries[0]);
+                tripTime.departure_time = GetTimeSpanFromString(entries[1]);
+                tripTime.trip_id = int.Parse(entries[2]);
+                bool isInRange = IsTimeInRange(ref tripTime, timeStart, timeEnd);
+                if(isInRange)
+                {
+                    IsTimeInRange(ref tripTime, timeStart, timeEnd);
+                    tripsAtStop.Add(tripTime);
+                }
+                ++index;
+            }
+
             return tripsAtStop;
         }
 
+        private bool IsTimeInRange(ref TripTimesModel trip, DateTime timeStart, DateTime timeEnd)
+        {
+            DateTime tempEnd = timeEnd;
+
+            bool multiDays = false;
+            DateTime secBeforeMidnight = timeStart.Date.Add(new TimeSpan(23,59,59));
+            if(timeEnd > secBeforeMidnight)
+            {
+                multiDays = true;
+                tempEnd = secBeforeMidnight;
+            }
+
+            if (trip.departure_time >= timeStart.TimeOfDay && trip.departure_time <= tempEnd.TimeOfDay )
+            {
+                return true;
+            }
+
+            if(multiDays)
+            {
+                if(trip.departure_time <= timeEnd.TimeOfDay)
+                {
+                    trip.departure_time = trip.departure_time.Add(new TimeSpan(1,0,0,0));
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         protected TripModel GetTripFromTripId(OpenArchive gtfsArchive, int tripId)
         {
@@ -225,7 +292,17 @@ namespace MetroLive.Services.Offline.GTFS
             //timeString has the format
             //"13:26:38"
             List<string> timeParts = timeString.Split(':').ToList();
-            TimeSpan time = new TimeSpan(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]));
+            int hour = int.Parse(timeParts[0]);
+            int minute = int.Parse(timeParts[1]);
+            int second = int.Parse(timeParts[2]);
+
+            //for some reason 12:00am is 24:00 and not 00:00
+            if(hour == 24)
+            {
+                hour = 0;
+            }
+
+            TimeSpan time = new TimeSpan(hour, minute, second);
             return time;
 		}
 
@@ -244,26 +321,5 @@ namespace MetroLive.Services.Offline.GTFS
             //failed to find archive in buffer
             return null;
         }
-
-		/*
-        public async Task<bool> IsTimeTableUptoDate()
-        {
-            if (this.useUncompressedGTFS == false)
-            {
-                ZipArchive archive = await this.GetZipFile(archiveFilePath);
-
-                if (archive == null)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return await fileMgr.DoesFolderExist("./GTFSLoader");
-            }
-
-            return true;
-        }
-        */
 	}
 }
