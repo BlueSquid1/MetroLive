@@ -4,17 +4,20 @@ using System.IO.Compression;
 using AppKit;
 using Foundation;
 using MetroLive.Services.Offline;
+using MetroLive.Services.Realtime;
 
 namespace MetroLive.macOS
 {
 	public partial class ViewController : NSViewController
 	{
-        MetroLive.Services.Offline.GTFS.GTFSLoaderAdelaide gtfs;
+        IOffline gtfs;
+        IRealtime siri;
 		public ViewController(IntPtr handle) : base(handle)
 		{
 			string path = System.Environment.CurrentDirectory + '/';
-			MetroLive.Services.Offline.FileManager fileMgr = new Services.Offline.FileManager(path);
+			FileManager fileMgr = new FileManager(path);
             gtfs = new Services.Offline.GTFS.GTFSLoaderAdelaide(fileMgr);
+            siri = new Services.Realtime.SIRI.SiriMgrAdelaide();
 		}
 
 		public override void ViewDidLoad()
@@ -46,8 +49,11 @@ namespace MetroLive.macOS
             //await gtfs.UpdateAsync();
 
             //Models.BusStopDetails stopDetails = await gtfs.GetStopDataAsync("11981", DateTime.MinValue, DateTime.MaxValue);
-			Models.BusStopDetails stopDetails = await gtfs.GetStopDataAsync("11981", new DateTime(2017, 04, 28, 18, 00, 0), new DateTime(2017, 04, 29, 18, 0, 0));
-			Console.WriteLine(stopDetails.StopId);
+			
+            Models.BusStopDetails stopDetailsOffline = await gtfs.GetStopDataAsync("11981", new DateTime(2017, 04, 28, 18, 00, 0), new DateTime(2017, 04, 29, 18, 0, 0));
+            Models.BusStopDetails stopDetailsOnline =  await siri.GetStopDataAsync("11981", new TimeSpan(2,0,0));
+
+            stopDetailsOnline.MergeStopDetails(stopDetailsOffline);
 		}
 	}
 }

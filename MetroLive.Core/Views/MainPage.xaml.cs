@@ -11,5 +11,10 @@ namespace MetroLive.Views
         {
             InitializeComponent();
         }
+
+        void OnButtonClicked(object sender, EventArgs args)
+        {
+            Console.WriteLine("got here");
+        }
     }
 }

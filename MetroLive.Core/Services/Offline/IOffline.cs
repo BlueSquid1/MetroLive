@@ -24,7 +24,7 @@ namespace MetroLive.Services.Offline
 		}
 	}
 
-    interface IOffline
+    public interface IOffline
     {
         //keeping track of update status
         event EventHandler<DownloadProgEventArgs> DownloadProg;

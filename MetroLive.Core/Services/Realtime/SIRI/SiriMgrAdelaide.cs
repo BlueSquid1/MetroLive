@@ -16,7 +16,7 @@ namespace MetroLive.Services.Realtime.SIRI
         public async Task<BusStopDetails> GetStopDataAsync(string StopRef, TimeSpan timeLength, bool forceRefresh = false)
         {
             //get the response from the server
-            string url = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM?MonitoringRef=" + StopRef.ToString() + "&PreviewInterval=" + timeLength.Minutes.ToString() + "&StopMonitoringDetailLevel=normal&MaximumStopVisits=100&Item=1";
+            string url = "http://realtime.adelaidemetro.com.au/SiriWebServiceSAVM/SiriStopMonitoring.svc/json/SM?MonitoringRef=" + StopRef.ToString() + "&PreviewInterval=" + timeLength.TotalMinutes.ToString() + "&StopMonitoringDetailLevel=normal&MaximumStopVisits=100&Item=1";
             string replyMsg = null;
             HttpClient httpClient = new HttpClient();
             replyMsg = await httpClient.GetStringAsync(new Uri(url));
