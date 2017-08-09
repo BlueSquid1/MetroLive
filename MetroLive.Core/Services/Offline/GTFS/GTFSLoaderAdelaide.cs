@@ -10,26 +10,14 @@ namespace MetroLive.Services.Offline.GTFS
 {
     public class GTFSLoaderAdelaide : GTFSLoader
     {
-        //constructor
-        //http://adelaidemetro.com.au/GTFS/google_transit.zip
-        //https://drive.google.com/open?id=0B05c7VIZLKVQTDlwRmYzaDlQY0E
-        //http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip
-        public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip")
+		//constructor
+		//http://adelaidemetro.com.au/GTFS/google_transit.zip
+		//https://drive.google.com/open?id=0B05c7VIZLKVQTDlwRmYzaDlQY0E
+		//http://spiderpig1.duckdns.org/public%2Fgoogle_transit.zip
+		//http://192.168.1.201/%2Fpublic%2FGTFS%2FAdelaide%2Ffeed_info.csv
+		public GTFSLoaderAdelaide(FileManager mFileMgr) : base(mFileMgr, "http://192.168.1.201/%2Fpublic%2FGTFS%2FAdelaide%2Fgoogle_transit.zip", "http://192.168.1.201/%2Fpublic%2FGTFS%2FAdelaide%2Ffeed_info.csv")
         {
 
-        }
-
-        /*
-        public async Task LoadSchedule()
-        {
-            HttpClient httpClient = new HttpClient();
-            Stream GTFSCompressed = await httpClient.GetStreamAsync(GTFSBaseUrl);
-
-            //System.IO.Compression.GZipStream gZip = new System.IO.Compression.GZipStream(GTFSCompressed, System.IO.Compression.CompressionLevel.Fastest);
-            //gZip.
-            //x.
-            //System.IO.Compression.ZipFile x;
-        }
-        */
+		}
     }
 }

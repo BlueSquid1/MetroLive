@@ -31,5 +31,7 @@ namespace MetroLive.Services.Offline
         Task<bool> UpdateAsync();
 
         Task<BusStopDetails> GetStopDataAsync(string StopRef, DateTime timeStart, DateTime timeEnd, bool forceRefresh = false);
+
+        Task<bool> IsUpdateAvaliable();
     }
 }

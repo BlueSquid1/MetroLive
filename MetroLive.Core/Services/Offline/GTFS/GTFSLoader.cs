@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using MetroLive.Models;
 using MetroLive.Services.Offline.GTFS.GTFSModels;
 using ServiceStack.Text;
@@ -31,6 +30,7 @@ namespace MetroLive.Services.Offline.GTFS
 		public event EventHandler<DownloadProgEventArgs> DownloadProg;
 
 		private string GTFSBaseUrl;
+        private string FeedInfoUrl;
 		private FileManager fileMgr;
         private string archiveFileName;
         private List<OpenArchive> bufferedArchives;
@@ -40,38 +40,18 @@ namespace MetroLive.Services.Offline.GTFS
         private List<RouteModel> routeList = null;
 
 		//constructor
-		public GTFSLoader(FileManager mFileMgr, string baseUrl)
+		public GTFSLoader(FileManager mFileMgr, string mGTFSBaseUrl, string mFeedInfoUrl)
 		{
             this.bufferedArchives = new List<OpenArchive>();
 			this.fileMgr = mFileMgr;
-			this.GTFSBaseUrl = baseUrl;
+			this.GTFSBaseUrl = mGTFSBaseUrl;
+            this.FeedInfoUrl = mFeedInfoUrl;
 			this.archiveFileName = "GTFSLoader.zip";
 		}
 
-        //assume file length is less than 4Gb
         async private Task<byte[]> DownloadGTFS()
         {
-            byte[] downloadFile;
-
-            DownloadProg?.Invoke(this, new DownloadProgEventArgs(0, 0));
-
-			using (var httpClient = new HttpClient())
-			using (var dataStream = await httpClient.GetStreamAsync(GTFSBaseUrl))
-			{
-                int fileLen = (int)dataStream.Length;
-				int receivedBytes = 0;
-				byte[] buffer = new byte[fileLen];
-
-                downloadFile = new byte[fileLen];
-
-				while (receivedBytes < fileLen)
-				{
-					int bytesRead = await dataStream.ReadAsync(buffer, 0, buffer.Length);
-					Array.Copy(buffer, 0, downloadFile, receivedBytes, bytesRead);
-					receivedBytes += bytesRead;
-                    DownloadProg?.Invoke(this, new DownloadProgEventArgs(receivedBytes,fileLen));
-				}
-			}
+            byte[] downloadFile = await this.DownloadFile(this.GTFSBaseUrl, true);
             return downloadFile;
         }
 
@@ -152,13 +132,85 @@ namespace MetroLive.Services.Offline.GTFS
             return stopDetails;
 		}
 
+		async public Task<bool> IsUpdateAvaliable()
+		{
+            try
+            {
+                //check if its in the buffer
+                OpenArchive gtfsArchive = GetArchiveFromBuffer(this.archiveFileName);
+                if (gtfsArchive == null)
+                {
+                    string completePath = this.fileMgr.FilePathRoot + this.archiveFileName;
+                    ZipArchive zipFile = this.fileMgr.GetZipFile(this.archiveFileName);
+                    gtfsArchive = new OpenArchive(completePath, zipFile);
+                    this.bufferedArchives.Add(gtfsArchive);
+                }
+
+                //done by checking if the feed version number is different
+                List<FeedInfo> feedInfos = null;
+                using (Stream infoStream = gtfsArchive.zip.GetEntry("google_transit/feed_info.csv").Open())
+                {
+                    feedInfos = CsvSerializer.DeserializeFromStream<List<FeedInfo>>(infoStream);
+                }
+
+                FeedInfo feedInfo = feedInfos.First();
+                int localVersion = feedInfo.feed_version;
+
+                //compare this local version with the online version
+                byte[] feedFile = await DownloadFile(this.FeedInfoUrl);
+                string feedString = Encoding.UTF8.GetString(feedFile);
+                List<FeedInfo> onlineFeedInfos = CsvSerializer.DeserializeFromString<List<FeedInfo>>(feedString);
+                FeedInfo onlineFeedInfo = onlineFeedInfos.First();
+                int onlineVersion = onlineFeedInfo.feed_version;
+
+                return onlineVersion != localVersion;
+            }
+            catch
+            {
+                //failed somewhere with reading local file
+                //return true so caller will update local version
+                return true;
+            }
+		}
+
+        private async Task<Byte[]> DownloadFile(string url, bool verbose = false)
+        {
+            if(verbose == true)
+            {
+                DownloadProg?.Invoke(this, new DownloadProgEventArgs(0, 0));
+            }
+
+            byte[] downloadFile = null;
+			using (var httpClient = new HttpClient())
+			using (var dataStream = await httpClient.GetStreamAsync(this.FeedInfoUrl))
+			{
+				int fileLen = (int)dataStream.Length;
+				int receivedBytes = 0;
+				byte[] buffer = new byte[fileLen];
+
+				downloadFile = new byte[fileLen];
+
+				while (receivedBytes < fileLen)
+				{
+					int bytesRead = await dataStream.ReadAsync(buffer, 0, buffer.Length);
+					Array.Copy(buffer, 0, downloadFile, receivedBytes, bytesRead);
+					receivedBytes += bytesRead;
+                    if (verbose == true)
+                    {
+                        DownloadProg?.Invoke(this, new DownloadProgEventArgs(receivedBytes, fileLen));
+                    }
+				}
+			}
+            return downloadFile;
+        }
+
 		protected StopModel GetStopFromStopRef(OpenArchive gtfsArchive, string stopRef)
         {
             if (stopsList == null)
             {
                 using (Stream stopsStream = gtfsArchive.zip.GetEntry("google_transit/stops.csv").Open())
                 {
-                    stopsList = CsvSerializer.DeserializeFromStream<List<StopModel>>(stopsStream);
+                    this.stopsList = CsvSerializer.DeserializeFromStream<List<StopModel>>(stopsStream);
                 }
             }
 
@@ -306,7 +358,6 @@ namespace MetroLive.Services.Offline.GTFS
             return time;
 		}
 
-
         private OpenArchive GetArchiveFromBuffer(string fileArchive)
         {
             string completePath = this.fileMgr.FilePathRoot + fileArchive;
@@ -321,5 +372,5 @@ namespace MetroLive.Services.Offline.GTFS
             //failed to find archive in buffer
             return null;
         }
-	}
+    }
 }
