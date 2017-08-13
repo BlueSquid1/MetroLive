@@ -9,6 +9,7 @@
     <RootNamespace>MetroLive.iOS</RootNamespace>
     <AssemblyName>MetroLive.iOS</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -107,9 +108,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetroLive.Core\MetroLive.Core.csproj">
-      <Project>{67276747-7E71-4B4E-9813-E8DE2803C3D8}</Project>
-      <Name>MetroLive.Core</Name>
+    <ProjectReference Include="..\MetroLive\MetroLive.csproj">
+      <Project>{0C9FC272-5BDC-4871-AA93-0EC67513F1C3}</Project>
+      <Name>MetroLive</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

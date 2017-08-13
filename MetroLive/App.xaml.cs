@@ -1,46 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MetroLive.Pages;
+using MetroLive.Views;
 
 using Xamarin.Forms;
-using MetroLive.GTFS;
-using MetroLive.SIRI;
-using MetroLive.Common;
-using MetroLive.SIRI.Adelaide;
-using MetroLive.Pages.MainPage;
 
 namespace MetroLive
 {
-    public partial class App : Application
-    {
-        private MetroLiveCore metroLive;
+	public partial class App : Application
+	{
+		public App()
+		{
+			InitializeComponent();
+            MainPage = new NavigationPage( new MainPage() );
+		}
 
-        public App(FileManager fileMgr)
-        {
-            InitializeComponent();
+		protected override void OnStart()
+		{
+			// Handle when your app starts
+		}
 
-            GTFSLoader gtfsLoader = new GTFSLoaderAdelaide(fileMgr);
-            SiriManager siriMgr = new SiriMgrAdelaide();
+		protected override void OnSleep()
+		{
+			// Handle when your app sleeps
+		}
 
-            metroLive = new MetroLiveCore(fileMgr, gtfsLoader, siriMgr);
-            this.MainPage = new NavigationPage(new MainPage(metroLive));
-        }
-
-        protected override void OnStart()
-        {
-            // Handle when your app starts
-        }
-
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
-
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
-        }
-    }
+		protected override void OnResume()
+		{
+			// Handle when your app resumes
+		}
+	}
 }
